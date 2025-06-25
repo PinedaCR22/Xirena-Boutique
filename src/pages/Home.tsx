@@ -1,14 +1,13 @@
 // src/pages/Home.tsx
+import { useTheme } from '../context/ThemeContext';
 import Carousel from '../sections/home/carousel';
 
+export default function Home() {
+  const { isLightMode } = useTheme();
 
-const Home = () => {
   return (
-
     <div className="pt-0">
-      <Carousel />
+      <Carousel isLightMode={isLightMode} />
     </div>
-  )
+  );
 }
-
-export default Home
