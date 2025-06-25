@@ -1,6 +1,6 @@
 // src/components/navbar.tsx
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import {
   FiHeart,
   FiShoppingCart,
@@ -8,24 +8,42 @@ import {
   FiX,
   FiSun,
   FiMoon,
-} from 'react-icons/fi';
-import { useTheme } from '../context/ThemeContext';
+} from 'react-icons/fi'
+import { useTheme } from '../context/ThemeContext'
 
 export default function Navbar() {
-  const { isLightMode, toggleMode } = useTheme();
-  const [menuOpen, setMenuOpen] = useState(false);
-  const navigate = useNavigate();
+  const { isLightMode, toggleMode } = useTheme()
+  const [menuOpen, setMenuOpen] = useState(false)
+  const navigate = useNavigate()
+  const { pathname } = useLocation()
 
   const links = [
     { to: '/', label: 'INICIO' },
-    { to: '/products', label: 'PRODUCTOS' },
+    { to: '/', label: 'PRODUCTOS', scrollTo: 'featured' },
     { to: '/categories', label: 'CATEGORÍAS' },
     { to: '/contact', label: 'CONTACTO' },
-  ];
+  ]
 
-  // Gradientes solicitados
-  const lightGradient = 'bg-gradient-to-r from-[#8FD4C8] to-[#F2D189]';
-  const darkGradient  = 'bg-gradient-to-r from-teal-500 to-pink-500';
+  const lightGradient = 'bg-gradient-to-r from-[#8FD4C8] to-[#F2D189]'
+  const darkGradient  = 'bg-gradient-to-r from-teal-500 to-pink-500'
+
+  const handleClick = (link: typeof links[0]) => {
+    setMenuOpen(false)
+    if (link.scrollTo) {
+      // Si estamos ya en homepage
+      if (pathname !== '/') {
+        navigate('/')
+        // luego de navegar, esperamos un tick y hacemos scroll
+        setTimeout(() => {
+          document.getElementById(link.scrollTo!)?.scrollIntoView({ behavior: 'smooth' })
+        }, 100)
+      } else {
+        document.getElementById(link.scrollTo!)?.scrollIntoView({ behavior: 'smooth' })
+      }
+    } else {
+      navigate(link.to)
+    }
+  }
 
   return (
     <nav
@@ -46,14 +64,20 @@ export default function Navbar() {
         </Link>
 
         {/* Menú escritorio */}
-        <ul className="hidden md:flex space-x-12 border-b-2 pb-2 border-white/50">
-          {links.map(({ to, label }) => (
-            <li key={to}>
+        <ul
+          className={`hidden md:flex space-x-12 pb-2 transition-colors duration-300 ${
+            isLightMode
+              ? 'border-b-2 border-black'
+              : 'border-b-2 border-white/50'
+          }`}
+        >
+          {links.map((link) => (
+            <li key={link.label}>
               <button
-                onClick={() => navigate(to)}
+                onClick={() => handleClick(link)}
                 className="font-semibold text-lg md:text-xl hover:opacity-80 transition"
               >
-                {label}
+                {link.label}
               </button>
             </li>
           ))}
@@ -87,16 +111,13 @@ export default function Navbar() {
           } border-t border-white/50 pb-4`}
         >
           <ul className="flex flex-col items-center space-y-4">
-            {links.map(({ to, label }) => (
-              <li key={to}>
+            {links.map((link) => (
+              <li key={link.label}>
                 <button
-                  onClick={() => {
-                    navigate(to);
-                    setMenuOpen(false);
-                  }}
+                  onClick={() => handleClick(link)}
                   className="font-semibold text-lg hover:opacity-80 transition"
                 >
-                  {label}
+                  {link.label}
                 </button>
               </li>
             ))}
@@ -109,5 +130,5 @@ export default function Navbar() {
         </div>
       )}
     </nav>
-  );
+  )
 }
