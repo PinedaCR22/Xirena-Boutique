@@ -20,8 +20,8 @@ export default function Navbar() {
   const links = [
     { to: '/', label: 'INICIO' },
     { to: '/', label: 'PRODUCTOS', scrollTo: 'featured' },
-    { to: '/categories', label: 'CATEGORÍAS' },
-    { to: '/contact', label: 'CONTACTO' },
+   { to: '/', label: 'CATEGORÍAS', scrollTo: 'categories' },
+   { to: '/', label: 'CONTACTO',   scrollTo: 'contact' },
   ]
 
   const lightGradient = 'bg-gradient-to-r from-[#8FD4C8] to-[#F2D189]'
@@ -85,7 +85,10 @@ export default function Navbar() {
 
         {/* Icons + toggle + hamburger */}
         <div className="flex items-center space-x-4 md:space-x-6 text-2xl md:text-3xl lg:text-4xl">
-          <button onClick={toggleMode} className="hover:opacity-80 transition">
+          <button
+            onClick={toggleMode}
+            className="hidden md:inline-flex hover:opacity-80 transition"
+          >
             {isLightMode ? <FiMoon /> : <FiSun />}
           </button>
           <button onClick={() => navigate('/wishes')} className="hover:opacity-80 transition">
