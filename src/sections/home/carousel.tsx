@@ -35,13 +35,16 @@ export default function Carousel({ isLightMode }: CarouselProps) {
             alt="Xirena Boutique Logo"
             className="object-cover object-center w-full h-full"
           />
-        </div>
+
+          </div>
+        {/* Subtítulo llamativo */}
         <p
-          className={`mt-4 text-lg md:text-xl transition-colors duration-300 ${
+          className={`mt-4 font-bold text-2xl md:text-3xl transition-colors duration-300 ${
             isLightMode ? 'text-black' : 'text-gray-200'
           }`}
+          style={{ fontFamily: "'Dancing Script', cursive" }}
         >
-          (Hacete un slogan para pegarlo acá)
+          ¡Empodera tu estilo!
         </p>
       </div>
 
