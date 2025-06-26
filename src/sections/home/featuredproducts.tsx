@@ -66,6 +66,7 @@ export default function FeaturedProducts({ isLightMode }: FeaturedProductsProps)
         : `¡${prod.name} se agregó a deseos!`,
     })
     setWishlist(next)
+    localStorage.setItem('wishlist', JSON.stringify(next))
   }
 
   const toggleCart = (prod: FeatureProduct) => {

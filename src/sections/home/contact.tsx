@@ -53,13 +53,13 @@ export default function Contact({ isLightMode }: ContactProps) {
   const borderColor = isLightMode ? 'border-black' : 'border-white'
 
   return (
-    <section className={`py-12 px-2 md:px-4 transition-colors duration-300 ${bgClass}`}>      
-      <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-12">
+    <section className={`py-12 transition-colors duration-300 ${bgClass}`}>
+      {/* grid a ancho completo, sin max-w ni mx-auto */}
+      <div className="w-full grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-16 px-4 md:px-0">
         {items.map((item, idx) => {
           const Icon = item.icon
-          const dividerClass = idx < items.length - 1
-            ? 'border-r-0 md:border-r ' + borderColor
-            : ''
+          const dividerClass =
+            idx < items.length - 1 ? `border-r-0 md:border-r ${borderColor}` : ''
 
           return (
             <div
@@ -67,7 +67,9 @@ export default function Contact({ isLightMode }: ContactProps) {
               className={`flex flex-col items-center text-center px-2 md:px-8 ${dividerClass}`}
             >
               <Icon
-                className={`mb-4 text-4xl ${isLightMode ? item.lightColor : item.darkColor}`}
+                className={`mb-4 text-4xl ${
+                  isLightMode ? item.lightColor : item.darkColor
+                }`}
               />
 
               <h3 className={`font-bold mb-2 md:mb-4 ${textPrimary}`}>
