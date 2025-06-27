@@ -82,6 +82,7 @@ export default function FeaturedProducts({ isLightMode }: FeaturedProductsProps)
         : `¡${prod.name} se agregó al carrito!`,
     })
     setCart(next)
+    localStorage.setItem('cart', JSON.stringify(next))
   }
 
   return (
