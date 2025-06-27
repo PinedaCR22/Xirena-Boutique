@@ -1,3 +1,4 @@
+// src/sections/home/categories.tsx
 import { useState, useEffect } from 'react'
 import {
   FiInfo,
@@ -17,6 +18,7 @@ export default function Categories() {
 
   const [selected, setSelected] = useState('Vestidos')
   const [page, setPage] = useState(1)
+  const [modalVersion, setModalVersion] = useState(0)
 
   const wishlistKey = 'wishlist'
   const cartKey = 'cart'
@@ -46,6 +48,7 @@ export default function Categories() {
     })
     setWishlist(next)
     localStorage.setItem(wishlistKey, JSON.stringify(next))
+    setModalVersion(v => v + 1)
   }
 
   const toggleCart = (prod: CategoryProduct) => {
@@ -58,6 +61,7 @@ export default function Categories() {
     })
     setCart(next)
     localStorage.setItem(cartKey, JSON.stringify(next))
+    setModalVersion(v => v + 1)
   }
 
   return (
@@ -76,7 +80,7 @@ export default function Categories() {
             <h2 className="text-2xl font-bold mb-4 lg:mb-8 text-center lg:text-left">
               ¡EXPLORA NUESTRAS<br className="hidden lg:block" /> CATEGORÍAS DE PRODUCTOS!
             </h2>
-            <div className="flex lg:flex-col gap-2">
+            <div className="flex flex-wrap justify-center lg:flex-col gap-2 overflow-x-auto max-w-full">
               {[...new Set(CATEGORY_PRODUCTS.map(p => p.category))].map(cat => (
                 <button
                   key={cat}
@@ -84,7 +88,7 @@ export default function Categories() {
                     setSelected(cat)
                     setPage(1)
                   }}
-                  className={`w-full px-4 py-2 rounded text-left transition-all font-semibold text-sm lg:text-base ${
+                  className={`px-4 py-2 rounded text-left transition-all font-semibold text-sm lg:text-base ${
                     cat === selected
                       ? 'bg-black text-white'
                       : isLightMode
@@ -101,141 +105,137 @@ export default function Categories() {
           <div className="lg:w-4/5">
             <h3 className="text-3xl font-bold text-center mb-6">{selected}</h3>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-              {pageItems.map(prod => {
-                const inWishlist = wishlist.some(p => p.id === prod.id)
-                const inCart = cart.some(p => p.id === prod.id)
+              {pageItems.map(prod => (
+                <div
+                  key={prod.id}
+                  className={`rounded-lg shadow-lg overflow-hidden transition-colors duration-300 ${
+                    isLightMode ? 'bg-white text-black' : 'bg-gray-800 text-white'
+                  }`}
+                >
+                  <div className="h-48 overflow-hidden group">
+                    <img
+                      src={prod.image}
+                      alt={prod.name}
+                      className="w-full h-full object-cover transition-all duration-500 group-hover:object-top"
+                    />
+                  </div>
+                  <div className="p-4">
+                    <h4 className="text-lg font-semibold mb-1">{prod.name}</h4>
+                    <span className="text-pink-500 font-bold block mb-4">
+                      ₡{prod.price.toLocaleString()}
+                    </span>
+                    <div className="flex justify-end gap-4 text-xl">
+                      <button
+                        aria-label="Más info"
+                        onClick={() =>
+                          showModal({
+                            type: 'info',
+                            title: prod.name,
+                            content: (
+                              <div key={modalVersion} className="flex flex-col lg:flex-row gap-6">
+                                <div className="w-full lg:w-1/2">
+                                  <img
+                                    src={prod.image}
+                                    alt={prod.name}
+                                    className="rounded-lg w-full object-cover"
+                                  />
+                                </div>
+                                <div className="w-full lg:w-1/2 flex flex-col justify-between p-4">
+                                  <h2 className="text-2xl font-semibold mb-2">{prod.name}</h2>
+                                  <p className="mb-4">{prod.description}</p>
 
-                return (
-                  <div
-                    key={prod.id}
-                    className={`rounded-lg shadow-lg overflow-hidden transition-colors duration-300 ${
-                      isLightMode ? 'bg-white text-black' : 'bg-gray-800 text-white'
-                    }`}
-                  >
-                    <div className="h-48 overflow-hidden group">
-                      <img
-                        src={prod.image}
-                        alt={prod.name}
-                        className="w-full h-full object-cover transition-all duration-500 group-hover:object-top"
-                      />
-                    </div>
-                    <div className="p-4">
-                      <h4 className="text-lg font-semibold mb-1">{prod.name}</h4>
-                      <span className="text-pink-500 font-bold block mb-4">
-                        ₡{prod.price.toLocaleString()}
-                      </span>
-                      <div className="flex justify-end gap-4 text-xl">
-                        <button
-                          aria-label="Más info"
-                          onClick={() =>
-                            showModal({
-                              type: 'info',
-                              title: prod.name,
-                              content: (
-                                <div className="flex flex-col lg:flex-row gap-6">
-                                  <div className="w-full lg:w-1/2">
-                                    <img
-                                      src={prod.image}
-                                      alt={prod.name}
-                                      className="rounded-lg w-full object-cover"
-                                    />
+                                  <span className="font-bold text-pink-500 mb-4 block">
+                                    ₡{prod.price.toLocaleString()}
+                                  </span>
+
+                                  <div className="flex justify-center items-center space-x-2 mb-4 lg:hidden">
+                                    <button
+                                      onClick={() => toggleWishlist(prod)}
+                                      className={`p-2 rounded ${
+                                        wishlist.some(p => p.id === prod.id)
+                                          ? 'bg-pink-500 text-white'
+                                          : 'bg-gray-200 text-black hover:bg-gray-300'
+                                      }`}
+                                    >
+                                      {wishlist.some(p => p.id === prod.id) ? <FaHeart /> : <HeartOutline />}
+                                    </button>
+                                    <button
+                                      onClick={() => toggleCart(prod)}
+                                      className={`p-2 rounded ${
+                                        cart.some(p => p.id === prod.id)
+                                          ? 'bg-pink-500 text-white'
+                                          : 'bg-gray-200 text-black hover:bg-gray-300'
+                                      }`}
+                                    >
+                                      <FiShoppingCart />
+                                    </button>
+                                    <button
+                                      onClick={hideModal}
+                                      className="p-2 rounded bg-gray-200 text-black hover:bg-gray-300"
+                                    >
+                                      Regresar
+                                    </button>
                                   </div>
-                                  <div className="w-full lg:w-1/2 flex flex-col justify-between p-4">
-                                    <h2 className="text-2xl font-semibold mb-2">{prod.name}</h2>
-                                    <p className="mb-4">{prod.description}</p>
-                                    <div className="flex justify-center items-center space-x-2 mb-4 lg:hidden">
-                                      <span className="font-bold">₡{prod.price.toLocaleString()}</span>
-                                      <button
-                                        onClick={() => {
-                                          toggleWishlist(prod)
-                                          hideModal()
-                                        }}
-                                        className={`p-2 rounded ${
-                                          inWishlist ? 'bg-pink-500 text-white' : 'bg-gray-200 text-black hover:bg-gray-300'
-                                        }`}
-                                      >
-                                        {inWishlist ? <FaHeart /> : <HeartOutline />}
-                                      </button>
-                                      <button
-                                        onClick={() => {
-                                          toggleCart(prod)
-                                          hideModal()
-                                        }}
-                                        className={`p-2 rounded ${
-                                          inCart ? 'bg-pink-500 text-white' : 'bg-gray-200 text-black hover:bg-gray-300'
-                                        }`}
-                                      >
-                                        <FiShoppingCart />
-                                      </button>
-                                      <button
-                                        onClick={hideModal}
-                                        className="p-2 rounded bg-gray-200 text-black hover:bg-gray-300"
-                                      >
-                                        Regresar
-                                      </button>
-                                    </div>
-                                    <div className="hidden lg:flex justify-end space-x-2">
-                                      <button
-                                        onClick={() => {
-                                          toggleWishlist(prod)
-                                          hideModal()
-                                        }}
-                                        className={`px-4 py-2 rounded ${
-                                          inWishlist ? 'bg-pink-500 text-white' : 'bg-gray-200 text-black hover:bg-gray-300'
-                                        }`}
-                                      >
-                                        {inWishlist ? <FaHeart /> : <HeartOutline />}
-                                      </button>
-                                      <button
-                                        onClick={() => {
-                                          toggleCart(prod)
-                                          hideModal()
-                                        }}
-                                        className={`px-4 py-2 rounded ${
-                                          inCart ? 'bg-pink-500 text-white' : 'bg-gray-200 text-black hover:bg-gray-300'
-                                        }`}
-                                      >
-                                        <FiShoppingCart />
-                                      </button>
-                                      <button
-                                        onClick={hideModal}
-                                        className="px-4 py-2 rounded bg-gray-200 text-black hover:bg-gray-300"
-                                      >
-                                        Regresar
-                                      </button>
-                                    </div>
+
+                                  <div className="hidden lg:flex justify-end space-x-2">
+                                    <button
+                                      onClick={() => toggleWishlist(prod)}
+                                      className={`px-4 py-2 rounded ${
+                                        wishlist.some(p => p.id === prod.id)
+                                          ? 'bg-pink-500 text-white'
+                                          : 'bg-gray-200 text-black hover:bg-gray-300'
+                                      }`}
+                                    >
+                                      {wishlist.some(p => p.id === prod.id) ? <FaHeart /> : <HeartOutline />}
+                                    </button>
+                                    <button
+                                      onClick={() => toggleCart(prod)}
+                                      className={`px-4 py-2 rounded ${
+                                        cart.some(p => p.id === prod.id)
+                                          ? 'bg-pink-500 text-white'
+                                          : 'bg-gray-200 text-black hover:bg-gray-300'
+                                      }`}
+                                    >
+                                      <FiShoppingCart />
+                                    </button>
+                                    <button
+                                      onClick={hideModal}
+                                      className="px-4 py-2 rounded bg-gray-200 text-black hover:bg-gray-300"
+                                    >
+                                      Regresar
+                                    </button>
                                   </div>
                                 </div>
-                              ),
-                            })
-                          }
-                          className="hover:text-pink-500 transition-colors"
-                        >
-                          <FiInfo />
-                        </button>
-                        <button
-                          aria-label={inWishlist ? 'Remover de deseos' : 'Añadir a deseos'}
-                          onClick={() => toggleWishlist(prod)}
-                          className={`transition-colors ${
-                            inWishlist ? 'text-pink-500' : 'hover:text-pink-500'
-                          }`}
-                        >
-                          {inWishlist ? <FaHeart /> : <HeartOutline />}
-                        </button>
-                        <button
-                          aria-label={inCart ? 'Remover del carrito' : 'Añadir al carrito'}
-                          onClick={() => toggleCart(prod)}
-                          className={`transition-colors ${
-                            inCart ? 'text-pink-500' : 'hover:text-pink-500'
-                          }`}
-                        >
-                          <FiShoppingCart />
-                        </button>
-                      </div>
+                              </div>
+                            ),
+                          })
+                        }
+                        className="hover:text-pink-500 transition-colors"
+                      >
+                        <FiInfo />
+                      </button>
+                      <button
+                        aria-label="Deseos"
+                        onClick={() => toggleWishlist(prod)}
+                        className={`transition-colors ${
+                          wishlist.some(p => p.id === prod.id) ? 'text-pink-500' : 'hover:text-pink-500'
+                        }`}
+                      >
+                        {wishlist.some(p => p.id === prod.id) ? <FaHeart /> : <HeartOutline />}
+                      </button>
+                      <button
+                        aria-label="Carrito"
+                        onClick={() => toggleCart(prod)}
+                        className={`transition-colors ${
+                          cart.some(p => p.id === prod.id) ? 'text-pink-500' : 'hover:text-pink-500'
+                        }`}
+                      >
+                        <FiShoppingCart />
+                      </button>
                     </div>
                   </div>
-                )
-              })}
+                </div>
+              ))}
             </div>
 
             <div className="mt-10 flex justify-center space-x-2">
