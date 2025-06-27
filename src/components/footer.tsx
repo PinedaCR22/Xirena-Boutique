@@ -20,10 +20,11 @@ export default function Footer() {
         {/* Logo + título: mobile order 1, desktop order 1 */}
         <div className="order-1 lg:order-1 flex flex-col items-center lg:items-start text-center lg:text-left">
           <img
-            src="/images/LOGO.jpg"
-            alt="Xirena Boutique"
-            className="h-24 w-auto mb-3 object-contain"
-          />
+  src={isLightMode ? '/images/LOGOO.png' : '/images/WHITE.png'}
+  alt="Xirena Boutique"
+  className="h-24 w-auto mb-3 object-contain"
+/>
+
           <span className="font-bold text-xl">Xirena Boutique</span>
         </div>
 
