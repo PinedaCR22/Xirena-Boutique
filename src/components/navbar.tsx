@@ -56,11 +56,12 @@ export default function Navbar() {
       <div className="flex items-center justify-between w-full">
         {/* Logo */}
         <Link to="/" className="flex-shrink-0">
-          <img
-            src="/images/LOGO.jpg"
-            alt="Xirena Logo"
-            className="w-24 h-16 md:w-32 md:h-20 lg:w-36 lg:h-24 object-contain"
-          />
+        <img
+  src={isLightMode ? '/images/LOGOO.png' : '/images/WHITE.png'}
+  alt="Xirena Logo"
+  className="w-24 h-16 md:w-32 md:h-20 lg:w-36 lg:h-24 object-contain"
+/>
+
         </Link>
 
         {/* Menú escritorio */}
