@@ -12,10 +12,6 @@ import { FaHeart } from 'react-icons/fa'
 import { useModal } from '../../context/ModalContext'
 import { ALL_PRODUCTS, type FeatureProduct } from '../../data/datafeatures'
 
-interface CartItem extends FeatureProduct {
-  quantity: number
-}
-
 interface FeaturedProductsProps {
   isLightMode: boolean
 }
@@ -26,24 +22,18 @@ export default function FeaturedProducts({ isLightMode }: FeaturedProductsProps)
   const [page, setPage] = useState(1)
   const perPage = 8
 
-  // Wishlist
   const [wishlist, setWishlist] = useState<FeatureProduct[]>([])
   useEffect(() => {
     const w = localStorage.getItem('wishlist')
     if (w) setWishlist(JSON.parse(w))
   }, [])
 
-  // Cart
-  const [cart, setCart] = useState<CartItem[]>([])
+  const [cart, setCart] = useState<FeatureProduct[]>([])
   useEffect(() => {
     const c = localStorage.getItem('cart')
     if (c) setCart(JSON.parse(c))
   }, [])
-  useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cart))
-  }, [cart])
 
-  // Filtrado + paginación
   const filtered = ALL_PRODUCTS.filter(p =>
     p.name.toLowerCase().includes(search.toLowerCase())
   )
@@ -73,7 +63,7 @@ export default function FeaturedProducts({ isLightMode }: FeaturedProductsProps)
     const exists = cart.some(p => p.id === prod.id)
     const next = exists
       ? cart.filter(p => p.id !== prod.id)
-      : [...cart, { ...prod, quantity: 1 }]
+      : [...cart, prod]
     showModal({
       type: exists ? 'removed' : 'added',
       title: exists ? '¡Eliminado!' : '¡Agregado al carrito!',
@@ -94,7 +84,6 @@ export default function FeaturedProducts({ isLightMode }: FeaturedProductsProps)
     >
       <h2 className="text-4xl font-bold text-center mb-8">¡Productos Destacados!</h2>
 
-      {/* Buscador */}
       <div className="flex justify-center mb-10">
         <div className="relative w-full max-w-md">
           <FiSearch
@@ -116,7 +105,6 @@ export default function FeaturedProducts({ isLightMode }: FeaturedProductsProps)
         </div>
       </div>
 
-      {/* Grid de productos: full ancho */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
         {pageItems.map(prod => {
           const inWishlist = wishlist.some(p => p.id === prod.id)
@@ -129,7 +117,6 @@ export default function FeaturedProducts({ isLightMode }: FeaturedProductsProps)
                 isLightMode ? 'bg-white text-black' : 'bg-gray-800 text-white'
               }`}
             >
-              {/* Imagen */}
               <div className="h-48 overflow-hidden group">
                 <img
                   src={prod.image}
@@ -138,7 +125,6 @@ export default function FeaturedProducts({ isLightMode }: FeaturedProductsProps)
                 />
               </div>
 
-              {/* Pie de card */}
               <div className="p-4">
                 <h3 className="text-lg font-semibold">{prod.name}</h3>
                 <div className="mt-2 flex justify-between items-center">
@@ -146,7 +132,6 @@ export default function FeaturedProducts({ isLightMode }: FeaturedProductsProps)
                     ₡{prod.price.toLocaleString()}
                   </span>
                   <div className="flex space-x-4 text-xl">
-                    {/* Info */}
                     <button
                       aria-label="Más info"
                       onClick={() =>
@@ -155,7 +140,6 @@ export default function FeaturedProducts({ isLightMode }: FeaturedProductsProps)
                           title: prod.name,
                           content: (
                             <div className="flex flex-col lg:flex-row gap-6">
-                              {/* Izquierda: imagen */}
                               <div className="w-full lg:w-1/2">
                                 <img
                                   src={prod.image}
@@ -163,15 +147,9 @@ export default function FeaturedProducts({ isLightMode }: FeaturedProductsProps)
                                   className="rounded-lg w-full object-cover"
                                 />
                               </div>
-
-                              {/* Derecha: título, descripción, precio y botones */}
                               <div className="w-full lg:w-1/2 flex flex-col justify-between p-4">
-                                {/* Título siempre arriba de descripción */}
                                 <h2 className="text-2xl font-semibold mb-2">{prod.name}</h2>
-                                {/* Descripción */}
                                 <p className="mb-4">{prod.description}</p>
-
-                                {/* Mobile: precio + botones en fila */}
                                 <div className="flex justify-center items-center space-x-2 mb-4 lg:hidden">
                                   <span className="font-bold">
                                     ₡{prod.price.toLocaleString()}
@@ -209,8 +187,6 @@ export default function FeaturedProducts({ isLightMode }: FeaturedProductsProps)
                                     Regresar
                                   </button>
                                 </div>
-
-                                {/* Desktop: botones agrupados a la derecha */}
                                 <div className="hidden lg:flex justify-end space-x-2">
                                   <button
                                     onClick={() => {
@@ -254,8 +230,6 @@ export default function FeaturedProducts({ isLightMode }: FeaturedProductsProps)
                     >
                       <FiInfo />
                     </button>
-
-                    {/* Wishlist rápido */}
                     <button
                       aria-label={inWishlist ? 'Remover de deseos' : 'Añadir a deseos'}
                       onClick={() => toggleWishlist(prod)}
@@ -265,8 +239,6 @@ export default function FeaturedProducts({ isLightMode }: FeaturedProductsProps)
                     >
                       {inWishlist ? <FaHeart /> : <HeartOutline />}
                     </button>
-
-                    {/* Carrito rápido */}
                     <button
                       aria-label={inCart ? 'Remover del carrito' : 'Añadir al carrito'}
                       onClick={() => toggleCart(prod)}
@@ -284,7 +256,6 @@ export default function FeaturedProducts({ isLightMode }: FeaturedProductsProps)
         })}
       </div>
 
-      {/* Paginación */}
       <div className="mt-10 flex justify-center space-x-2">
         <button
           onClick={() => setPage(p => Math.max(1, p - 1))}
