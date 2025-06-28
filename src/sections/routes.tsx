@@ -4,6 +4,7 @@ import RootLayout from '../components/RootLayout'
 import Home from '../pages/Home'
 import Wishes from '../pages/Wishes'
 import Buy from '../pages/Buy'
+import Checkout from '../pages/chekout'
 
 export default function AppRoutes() {
   return (
@@ -18,6 +19,8 @@ export default function AppRoutes() {
           {/* Rutas reales */}
           <Route path="wishes" element={<Wishes />} />
           <Route path="cart" element={<Buy />} />
+          <Route path="checkout" element={<Checkout />} />
+
         </Route>
       </Routes>
     </BrowserRouter>
