@@ -21,6 +21,7 @@ export default function Navbar() {
     { to: '/', label: 'INICIO' },
     { to: '/', label: 'PRODUCTOS', scrollTo: 'featured' },
    { to: '/', label: 'CATEGORÍAS', scrollTo: 'categories' },
+   { to: '/', label: 'SOBRE MÍ', scrollTo: 'aboutme' },
    { to: '/', label: 'CONTACTO',   scrollTo: 'contact' },
   ]
 
