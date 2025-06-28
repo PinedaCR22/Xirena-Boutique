@@ -14,22 +14,35 @@ import type { FeatureProduct } from '../data/datafeatures'
 
 export default function Wishes() {
   const { isLightMode } = useTheme()
-  const { showModal } = useModal()
+  const { showModal, hideModal } = useModal()
   const navigate = useNavigate()
 
   const [wishlist, setWishlist] = useState<FeatureProduct[]>([])
+  const [cart, setCart] = useState<FeatureProduct[]>([])
   const [page, setPage] = useState(1)
   const perPage = 3
 
   useEffect(() => {
     const stored = localStorage.getItem('wishlist')
     if (stored) setWishlist(JSON.parse(stored))
+
+    const storedCart = localStorage.getItem('cart')
+    if (storedCart) setCart(JSON.parse(storedCart))
   }, [])
+
+  const saveWishlist = (items: FeatureProduct[]) => {
+    setWishlist(items)
+    localStorage.setItem('wishlist', JSON.stringify(items))
+  }
+
+  const saveCart = (items: FeatureProduct[]) => {
+    setCart(items)
+    localStorage.setItem('cart', JSON.stringify(items))
+  }
 
   const remove = (id: number) => {
     const next = wishlist.filter((p) => p.id !== id)
-    setWishlist(next)
-    localStorage.setItem('wishlist', JSON.stringify(next))
+    saveWishlist(next)
     showModal({
       type: 'removed',
       title: '¡Eliminado!',
@@ -38,6 +51,19 @@ export default function Wishes() {
     if ((page - 1) * perPage >= next.length && page > 1) {
       setPage((prev) => prev - 1)
     }
+  }
+
+  const toggleCart = (prod: FeatureProduct) => {
+    const exists = cart.some((p) => p.id === prod.id)
+    const next = exists ? cart.filter((p) => p.id !== prod.id) : [...cart, prod]
+    saveCart(next)
+    showModal({
+      type: exists ? 'removed' : 'added',
+      title: exists ? '¡Eliminado!' : '¡Agregado al carrito!',
+      message: exists
+        ? `${prod.name} se removió del carrito`
+        : `${prod.name} se agregó al carrito`,
+    })
   }
 
   const pageCount = Math.ceil(wishlist.length / perPage)
@@ -55,7 +81,7 @@ export default function Wishes() {
         <p>No tienes productos en tu lista de deseos.</p>
         <button
           onClick={() => navigate(-1)}
-          className="mt-6 px-6 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 transition"
+          className="mt-6 px-6 py-2 bg-gray-200 text-black hover:bg-gray-300 rounded"
         >
           Regresar
         </button>
@@ -84,95 +110,167 @@ export default function Wishes() {
             </tr>
           </thead>
           <tbody>
-            {pageItems.map((prod) => (
-              <tr key={prod.id}>
-                <td className="px-4 py-3 border-b text-center">
-                  <div className="inline-flex flex-col items-center space-y-2">
-                    <img
-                      src={prod.image}
-                      alt={prod.name}
-                      className="w-24 h-16 object-cover rounded"
-                    />
-                    <h3 className="font-semibold">{prod.name}</h3>
-                    <span className="text-pink-500 font-bold">
-                      ₡{prod.price.toLocaleString()}
-                    </span>
-                  </div>
-                </td>
-                <td className="px-4 py-3 border-b text-center">
-                  <div className="inline-flex items-center space-x-4 text-2xl">
-                    <button
-                      onClick={() =>
-                        showModal({
-                          type: 'info',
-                          title: prod.name,
-                          content: (
-                            <div className="flex flex-col lg:flex-row gap-6">
-                              <div className="w-full lg:w-1/2">
-                                <img
-                                  src={prod.image}
-                                  alt={prod.name}
-                                  className="rounded-lg w-full object-cover"
-                                />
+            {pageItems.map((prod) => {
+              const inCart = cart.some(p => p.id === prod.id)
+              return (
+                <tr key={prod.id}>
+                  <td className="px-4 py-3 border-b text-center">
+                    <div className="inline-flex flex-col items-center space-y-2">
+                      <img
+                        src={prod.image}
+                        alt={prod.name}
+                        className="w-24 h-16 object-cover rounded"
+                      />
+                      <h3 className="font-semibold">{prod.name}</h3>
+                      <span className="text-pink-500 font-bold">
+                        ₡{prod.price.toLocaleString()}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 border-b text-center">
+                    <div className="inline-flex items-center space-x-4 text-2xl">
+                      <button
+                        onClick={() =>
+                          showModal({
+                            type: 'info',
+                            title: prod.name,
+                            content: (
+                              <div className="flex flex-col lg:flex-row gap-6">
+                                <div className="w-full lg:w-1/2">
+                                  <img
+                                    src={prod.image}
+                                    alt={prod.name}
+                                    className="rounded-lg w-full object-cover"
+                                  />
+                                </div>
+                                <div className="w-full lg:w-1/2 flex flex-col justify-between p-4">
+                                  <h2 className="text-2xl font-semibold mb-2">{prod.name}</h2>
+                                  <p className="mb-4">{prod.description}</p>
+                                  <span className="font-bold text-pink-500 mb-4 block">
+                                    ₡{prod.price.toLocaleString()}
+                                  </span>
+                                  <div className="flex justify-center items-center space-x-2 mb-4 lg:hidden">
+                                    <button
+                                      onClick={() => {
+                                        const next = wishlist.filter((p) => p.id !== prod.id)
+                                        saveWishlist(next)
+                                        hideModal('info')
+                                        setTimeout(() => {
+                                          showModal({
+                                            type: 'removed',
+                                            title: '¡Eliminado!',
+                                            message: `${prod.name} fue removido de tu lista de deseos`,
+                                          })
+                                        }, 200)
+                                        if ((page - 1) * perPage >= next.length && page > 1) {
+                                          setPage((prev) => prev - 1)
+                                        }
+                                      }}
+                                      className="p-2 rounded bg-pink-500 text-white hover:bg-pink-600"
+                                    >
+                                      <FaHeart />
+                                    </button>
+                                    <button
+                                      onClick={() => toggleCart(prod)}
+                                      className={`p-2 rounded ${
+                                        inCart
+                                          ? 'bg-pink-500 text-white'
+                                          : 'bg-gray-200 text-black hover:bg-gray-300'
+                                      }`}
+                                    >
+                                      <FiShoppingCart />
+                                    </button>
+                                    <button
+                                      onClick={() => hideModal('info')}
+                                      className="p-2 rounded bg-gray-200 text-black hover:bg-gray-300"
+                                    >
+                                      Regresar
+                                    </button>
+                                  </div>
+                                  <div className="hidden lg:flex justify-end space-x-2">
+                                    <button
+                                      onClick={() => {
+                                        const next = wishlist.filter((p) => p.id !== prod.id)
+                                        saveWishlist(next)
+                                        hideModal('info')
+                                        setTimeout(() => {
+                                          showModal({
+                                            type: 'removed',
+                                            title: '¡Eliminado!',
+                                            message: `${prod.name} fue removido de tu lista de deseos`,
+                                          })
+                                        }, 200)
+                                        if ((page - 1) * perPage >= next.length && page > 1) {
+                                          setPage((prev) => prev - 1)
+                                        }
+                                      }}
+                                      className="px-4 py-2 rounded bg-pink-500 text-white hover:bg-pink-600"
+                                    >
+                                      <FaHeart />
+                                    </button>
+                                    <button
+                                      onClick={() => toggleCart(prod)}
+                                      className={`px-4 py-2 rounded ${
+                                        inCart
+                                          ? 'bg-pink-500 text-white'
+                                          : 'bg-gray-200 text-black hover:bg-gray-300'
+                                      }`}
+                                    >
+                                      <FiShoppingCart />
+                                    </button>
+                                    <button
+                                      onClick={() => hideModal('info')}
+                                      className="px-4 py-2 rounded bg-gray-200 text-black hover:bg-gray-300"
+                                    >
+                                      Regresar
+                                    </button>
+                                  </div>
+                                </div>
                               </div>
-                              <div className="w-full lg:w-1/2 flex flex-col justify-between p-4">
-                                <h2 className="text-2xl font-semibold mb-2">
-                                  {prod.name}
-                                </h2>
-                                <p className="mb-4">{prod.description}</p>
-                              </div>
-                            </div>
-                          ),
-                        })
-                      }
-                      className="hover:text-pink-500"
-                    >
-                      <FiInfo />
-                    </button>
+                            ),
+                          })
+                        }
+                        className="hover:text-pink-500"
+                      >
+                        <FiInfo />
+                      </button>
+                      <button
+                        onClick={() => remove(prod.id)}
+                        className="text-pink-500"
+                      >
+                        <FaHeart />
+                      </button>
+                      <button
+                        onClick={() => toggleCart(prod)}
+                        className={`hover:text-pink-500 ${inCart ? 'text-pink-500' : ''}`}
+                      >
+                        <FiShoppingCart />
+                      </button>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 border-b text-center">
                     <button
-                      onClick={() => remove(prod.id)}
-                      className="hover:text-pink-500"
-                    >
-                      <FaHeart />
-                    </button>
-                    <button
-                      onClick={() =>
+                      onClick={() => {
+                        const url = `${window.location.origin}/product/${prod.id}`
+                        navigator.clipboard.writeText(url)
                         showModal({
                           type: 'added',
-                          title: '¡Agregado!',
-                          message: '¡El producto fue agregado al carrito!',
+                          title: '¡Enlace copiado!',
+                          message: '¡URL del producto copiada al portapapeles!',
                         })
-                      }
-                      className="hover:text-pink-500"
+                      }}
+                      className="text-2xl hover:text-pink-500"
                     >
-                      <FiShoppingCart />
+                      <FiCopyLink />
                     </button>
-                  </div>
-                </td>
-                <td className="px-4 py-3 border-b text-center">
-                  <button
-                    onClick={() => {
-                      const url = `${window.location.origin}/product/${prod.id}`
-                      navigator.clipboard.writeText(url)
-                      showModal({
-                        type: 'added',
-                        title: '¡Enlace copiado!',
-                        message:
-                          '¡URL del producto copiada al portapapeles!',
-                      })
-                    }}
-                    className="text-2xl hover:text-pink-500"
-                  >
-                    <FiCopyLink />
-                  </button>
-                </td>
-              </tr>
-            ))}
+                  </td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       </div>
 
-      {/* Paginación estilo FeaturedProducts */}
       {pageCount > 1 && (
         <div className="mt-10 flex justify-center space-x-2">
           <button
@@ -205,10 +303,11 @@ export default function Wishes() {
         </div>
       )}
 
-      {/* Botones finales: juntos y en orden corregido */}
       <div className="flex justify-end space-x-4 mt-6">
         <button
           onClick={() => {
+            const nextCart = [...cart, ...wishlist.filter(p => !cart.some(c => c.id === p.id))]
+            saveCart(nextCart)
             showModal({
               type: 'added',
               title: '¡Agregado!',
@@ -220,8 +319,21 @@ export default function Wishes() {
           Agregar todo al carrito
         </button>
         <button
+          onClick={() => {
+            saveWishlist([])
+            showModal({
+              type: 'removed',
+              title: '¡Vaciado!',
+              message: '¡Tu lista de deseos ha sido vaciada!',
+            })
+          }}
+          className="px-6 py-2 bg-gray-200 text-black rounded hover:bg-gray-300 transition"
+        >
+          Vaciar lista de deseos
+        </button>
+        <button
           onClick={() => navigate(-1)}
-          className="px-6 py-2 border border-pink-500 text-pink-500 rounded hover:bg-pink-50 transition"
+          className="px-6 py-2 bg-gray-200 text-black hover:bg-gray-300 rounded"
         >
           Regresar
         </button>

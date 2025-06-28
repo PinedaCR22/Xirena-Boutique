@@ -15,7 +15,7 @@ export interface ModalConfig {
 
 interface ModalContextValue {
   showModal: (config: ModalConfig) => void
-  hideModal: () => void
+  hideModal: (target?: 'info' | 'toast') => void
 }
 
 const ModalContext = createContext<ModalContextValue | undefined>(undefined)
@@ -39,16 +39,19 @@ export const ModalProvider: FC<{ children: ReactNode }> = ({ children }) => {
     }
   }
 
-  const hideModal = () => {
-    setInfoModal(null)
-    setToastModal(null)
+  const hideModal = (target?: 'info' | 'toast') => {
+    if (target === 'info') setInfoModal(null)
+    else if (target === 'toast') setToastModal(null)
+    else {
+      setInfoModal(null)
+      setToastModal(null)
+    }
   }
 
   return (
     <ModalContext.Provider value={{ showModal, hideModal }}>
       {children}
 
-      {/* Modal informativo */}
       {infoModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-40">
           <div
@@ -61,7 +64,6 @@ export const ModalProvider: FC<{ children: ReactNode }> = ({ children }) => {
         </div>
       )}
 
-      {/* Modal de éxito o eliminación */}
       {toastModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div
