@@ -170,7 +170,8 @@ export default function Categories() {
                                       <FiShoppingCart />
                                     </button>
                                     <button
-                                      onClick={hideModal}
+                                      onClick={() => hideModal()}
+
                                       className="p-2 rounded bg-gray-200 text-black hover:bg-gray-300"
                                     >
                                       Regresar
@@ -199,7 +200,8 @@ export default function Categories() {
                                       <FiShoppingCart />
                                     </button>
                                     <button
-                                      onClick={hideModal}
+                                      onClick={() => hideModal()}
+
                                       className="px-4 py-2 rounded bg-gray-200 text-black hover:bg-gray-300"
                                     >
                                       Regresar
