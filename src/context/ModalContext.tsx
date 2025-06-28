@@ -11,6 +11,7 @@ export interface ModalConfig {
   title: string
   message?: string
   content?: ReactNode
+  action?: () => void
 }
 
 interface ModalContextValue {
@@ -60,6 +61,17 @@ export const ModalProvider: FC<{ children: ReactNode }> = ({ children }) => {
           >
             <h2 className="text-2xl font-semibold mb-4">{infoModal.title}</h2>
             <div className="mb-4">{infoModal.content}</div>
+            {infoModal.action && (
+              <button
+                onClick={infoModal.action}
+                className={`mt-2 px-4 py-2 rounded transition
+                  ${isLightMode
+                    ? 'bg-pink-500 text-white hover:bg-pink-600'
+                    : 'bg-pink-400 text-white hover:bg-pink-500'}`}
+              >
+                Aceptar
+              </button>
+            )}
           </div>
         </div>
       )}
