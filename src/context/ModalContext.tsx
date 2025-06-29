@@ -4,7 +4,7 @@ import { useTheme } from './ThemeContext'
 import { FiShoppingCart } from 'react-icons/fi'
 import { FaHeartBroken } from 'react-icons/fa'
 
-export type ModalType = 'added' | 'removed' | 'info'
+export type ModalType = 'added' | 'removed' | 'info' | 'error'
 
 export interface ModalConfig {
   type: ModalType
