@@ -1,13 +1,16 @@
-// src/pages/Home.tsx
+import { useRef } from 'react'
 import { useTheme } from '../context/ThemeContext'
 import Carousel from '../sections/home/carousel'
 import FeaturedProducts from '../sections/home/featuredproducts'
-import Categories from '../sections/home/categories'
+import Categories, { type CategoriesHandle } from '../sections/home/categories'
 import Contact from '../sections/home/contact'
 import AboutMe from '../sections/home/aboutme'
 
 export default function Home() {
   const { isLightMode } = useTheme()
+
+  // 🔧 Este ref es la CLAVE para conectar el contexto con el componente
+  const categoriesRef = useRef<CategoriesHandle>(null)
 
   return (
     <div className="pt-0">
@@ -21,17 +24,15 @@ export default function Home() {
       </div>
       <div className="h-16 md:h-24" />
 
-      {/* Categories */}
+      {/* Categories - aquí se pasa el ref */}
       <div id="categories">
-        <Categories />
+        <Categories ref={categoriesRef} />
       </div>
-      <div className="h-16 md:h-24" />
 
-       {/* AboutMe */}
+      {/* About Me */}
       <div id="aboutme">
         <AboutMe />
       </div>
-      <div className="h-16 md:h-24" />
 
       {/* Contact */}
       <div id="contact">

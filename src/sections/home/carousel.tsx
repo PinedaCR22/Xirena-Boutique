@@ -24,7 +24,7 @@ export default function Carousel({ isLightMode }: CarouselProps) {
   return (
     <section
       className={`py-8 transition-colors duration-300 ${
-        isLightMode ? 'bg-white' : 'bg-gray-800'
+        isLightMode ? 'bg-white' : 'bg-[#f7e6e2] text-black'
       }`}
     >
       {/* Hero con logo dinámico */}
@@ -40,7 +40,7 @@ export default function Carousel({ isLightMode }: CarouselProps) {
         {/* Subtítulo llamativo */}
         <p
           className={`mt-4 font-bold text-2xl md:text-3xl transition-colors duration-300 ${
-            isLightMode ? 'text-black' : 'text-gray-200'
+            isLightMode ? 'text-black' : 'text-black'
           }`}
           style={{ fontFamily: "'Dancing Script', cursive" }}
         >

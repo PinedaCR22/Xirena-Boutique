@@ -1,5 +1,10 @@
-// src/sections/home/categories.tsx
-import { useState, useEffect } from 'react'
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react'
 import {
   FiInfo,
   FiHeart as HeartOutline,
@@ -10,11 +15,18 @@ import {
 import { FaHeart } from 'react-icons/fa'
 import { useTheme } from '../../context/ThemeContext'
 import { useModal } from '../../context/ModalContext'
+import { useCategoriesScroll } from '../../context/CategoriesScrollContext'
 import { CATEGORY_PRODUCTS, type CategoryProduct } from '../../data/datacategories'
 
-export default function Categories() {
+export type CategoriesHandle = {
+  scrollToCategory: (cat: string) => void
+}
+
+const Categories = forwardRef<CategoriesHandle>((_props, ref) => {
+  const sectionRef = useRef<HTMLElement>(null)
   const { isLightMode } = useTheme()
   const { showModal, hideModal } = useModal()
+  const { register } = useCategoriesScroll()
 
   const [selected, setSelected] = useState('Vestidos')
   const [page, setPage] = useState(1)
@@ -33,46 +45,74 @@ export default function Categories() {
     if (c) setCart(JSON.parse(c))
   }, [])
 
+  useImperativeHandle(ref, () => ({
+    scrollToCategory: (cat: string) => {
+      setSelected(cat)
+      setPage(1)
+      sectionRef.current?.scrollIntoView({ behavior: 'smooth' })
+    },
+  }))
+
+  useEffect(() => {
+    if (ref && typeof ref !== 'function') {
+      register(ref.current!)
+    }
+  }, [ref, register])
+
   const filtered = CATEGORY_PRODUCTS.filter(p => p.category === selected)
   const perPage = window.innerWidth < 768 ? 2 : 6
   const pageCount = Math.ceil(filtered.length / perPage)
   const pageItems = filtered.slice((page - 1) * perPage, page * perPage)
 
   const toggleWishlist = (prod: CategoryProduct) => {
-    const exists = wishlist.some(p => p.id === prod.id)
-    const next = exists ? wishlist.filter(p => p.id !== prod.id) : [...wishlist, prod]
-    showModal({
-      type: exists ? 'removed' : 'added',
-      title: exists ? '¡Eliminado!' : '¡Agregado!',
-      message: exists ? `${prod.name} fue removido` : `${prod.name} fue agregado a deseos`,
-    })
-    setWishlist(next)
-    localStorage.setItem(wishlistKey, JSON.stringify(next))
-    setModalVersion(v => v + 1)
-  }
+  const exists = wishlist.some(p => p.id === prod.id)
+  const next = exists
+    ? wishlist.filter(p => p.id !== prod.id)
+    : [...wishlist, prod]
 
-  const toggleCart = (prod: CategoryProduct) => {
-    const exists = cart.some(p => p.id === prod.id)
-    const next = exists ? cart.filter(p => p.id !== prod.id) : [...cart, prod]
-    showModal({
-      type: exists ? 'removed' : 'added',
-      title: exists ? '¡Eliminado!' : '¡Agregado al carrito!',
-      message: exists ? `${prod.name} se removió del carrito` : `${prod.name} se agregó al carrito`,
-    })
-    setCart(next)
-    localStorage.setItem(cartKey, JSON.stringify(next))
-    setModalVersion(v => v + 1)
-  }
+  showModal({
+    type: exists ? 'removed' : 'added',
+    title: exists ? '¡Eliminado!' : '¡Agregado!',
+    message: exists
+      ? `${prod.name} fue removido de la lista de deseos`
+      : `${prod.name} fue agregado a la lista de deseos`,
+  })
+
+  setWishlist(next)
+  localStorage.setItem(wishlistKey, JSON.stringify(next))
+  setModalVersion(v => v + 1)
+}
+
+const toggleCart = (prod: CategoryProduct) => {
+  const exists = cart.some(p => p.id === prod.id)
+  const next = exists
+    ? cart.filter(p => p.id !== prod.id)
+    : [...cart, prod]
+
+  showModal({
+    type: exists ? 'removed' : 'added',
+    title: exists ? '¡Eliminado del carrito!' : '¡Agregado al carrito!',
+    message: exists
+      ? `${prod.name} fue removido del carrito`
+      : `${prod.name} fue agregado al carrito`,
+  })
+
+  setCart(next)
+  localStorage.setItem(cartKey, JSON.stringify(next))
+  setModalVersion(v => v + 1)
+}
+
 
   return (
     <section
+      ref={sectionRef}
       className={`py-12 px-4 sm:px-8 lg:px-16 transition-colors min-h-screen ${
-        isLightMode ? 'bg-white text-black' : 'bg-gray-900 text-white'
+        isLightMode ? 'bg-white text-black' : 'bg-[#f7e6e2] text-black'
       }`}
     >
       <div
         className={`w-full rounded-xl shadow-xl p-4 md:p-6 lg:p-8 ${
-          isLightMode ? 'bg-white text-black' : 'bg-gray-900 text-white'
+          isLightMode ? 'bg-white text-black' : 'bg-[#f7e6e2] text-black'
         } lg:bg-transparent`}
       >
         <div className="flex flex-col lg:flex-row gap-6">
@@ -93,7 +133,7 @@ export default function Categories() {
                       ? 'bg-black text-white'
                       : isLightMode
                       ? 'text-black hover:bg-gray-100'
-                      : 'text-white hover:bg-gray-700'
+                      : 'bg-[#f7e6e2] text-black'
                   }`}
                 >
                   {cat}
@@ -109,7 +149,7 @@ export default function Categories() {
                 <div
                   key={prod.id}
                   className={`rounded-lg shadow-lg overflow-hidden transition-colors duration-300 ${
-                    isLightMode ? 'bg-white text-black' : 'bg-gray-800 text-white'
+                    isLightMode ? 'bg-white text-black' : 'bg-[#f7e6e2] text-black'
                   }`}
                 >
                   <div className="h-48 overflow-hidden group">
@@ -171,7 +211,6 @@ export default function Categories() {
                                     </button>
                                     <button
                                       onClick={() => hideModal()}
-
                                       className="p-2 rounded bg-gray-200 text-black hover:bg-gray-300"
                                     >
                                       Regresar
@@ -201,7 +240,6 @@ export default function Categories() {
                                     </button>
                                     <button
                                       onClick={() => hideModal()}
-
                                       className="px-4 py-2 rounded bg-gray-200 text-black hover:bg-gray-300"
                                     >
                                       Regresar
@@ -272,4 +310,6 @@ export default function Categories() {
       </div>
     </section>
   )
-}
+})
+
+export default Categories

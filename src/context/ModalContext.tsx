@@ -57,7 +57,7 @@ export const ModalProvider: FC<{ children: ReactNode }> = ({ children }) => {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-40">
           <div
             className={`rounded-lg p-6 text-center transition-colors my-8 w-11/12 max-w-4xl
-              ${isLightMode ? 'bg-white text-gray-800' : 'bg-gray-800 text-white'}`}
+              ${isLightMode ? 'bg-white text-gray-800' : 'bg-[#f7e6e2] text-black'}`}
           >
             <h2 className="text-2xl font-semibold mb-4">{infoModal.title}</h2>
             <div className="mb-4">{infoModal.content}</div>
@@ -80,7 +80,7 @@ export const ModalProvider: FC<{ children: ReactNode }> = ({ children }) => {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div
             className={`rounded-lg p-6 text-center transition-colors my-8 w-11/12 max-w-md
-              ${isLightMode ? 'bg-white text-gray-800' : 'bg-gray-800 text-white'}`}
+              ${isLightMode ? 'bg-white text-gray-800' : 'bg-[#f7e6e2] text-black'}`}
           >
             <div className="text-5xl mb-4">
               {toastModal.type === 'added' && (

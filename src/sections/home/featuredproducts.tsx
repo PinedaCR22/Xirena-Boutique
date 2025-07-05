@@ -73,7 +73,7 @@ export default function FeaturedProducts({ isLightMode }: FeaturedProductsProps)
     <section
       id="featured"
       className={`py-12 px-4 sm:px-8 lg:px-16 transition-colors ${
-        isLightMode ? 'bg-white text-black' : 'bg-gray-900 text-white'
+        isLightMode ? 'bg-white text-black' : 'bg-[#f7e6e2] text-black'
       }`}
     >
       <h2 className="text-4xl font-bold text-center mb-8">¡Productos Destacados!</h2>
@@ -108,7 +108,7 @@ export default function FeaturedProducts({ isLightMode }: FeaturedProductsProps)
             <div
               key={prod.id}
               className={`rounded-lg shadow-lg overflow-hidden transition-colors duration-300 ${
-                isLightMode ? 'bg-white text-black' : 'bg-gray-800 text-white'
+                isLightMode ? 'bg-white text-black' : 'bg-[#f7e6e2] text-black'
               }`}
             >
               <div className="h-48 overflow-hidden group">

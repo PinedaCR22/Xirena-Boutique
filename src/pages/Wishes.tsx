@@ -92,11 +92,11 @@ export default function Wishes() {
   return (
     <section
       className={`transition-colors duration-300 py-12 px-4 sm:px-8 lg:px-16 ${
-        isLightMode ? 'bg-white text-gray-800' : 'bg-gray-900 text-gray-200'
+        isLightMode ? 'bg-white text-gray-800' : 'bg-[#f7e6e2] text-black'
       }`}
     >
       <h1 className="flex items-center mb-8 text-4xl font-bold space-x-3">
-        <FaHeart className={isLightMode ? 'text-pink-500' : 'text-white'} />
+        <FaHeart className={isLightMode ? 'text-pink-500' : 'text-pink-500'} />
         <span>Mi Lista de Deseos</span>
       </h1>
 

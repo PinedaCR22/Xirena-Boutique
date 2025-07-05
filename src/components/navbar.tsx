@@ -1,4 +1,3 @@
-// src/components/navbar.tsx
 import { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import {
@@ -20,21 +19,19 @@ export default function Navbar() {
   const links = [
     { to: '/', label: 'INICIO' },
     { to: '/', label: 'PRODUCTOS', scrollTo: 'featured' },
-   { to: '/', label: 'CATEGORÍAS', scrollTo: 'categories' },
-   { to: '/', label: 'SOBRE MÍ', scrollTo: 'aboutme' },
-   { to: '/', label: 'CONTACTO',   scrollTo: 'contact' },
+    { to: '/', label: 'CATEGORÍAS', scrollTo: 'categories' },
+    { to: '/', label: 'SOBRE MÍ', scrollTo: 'aboutme' },
+    { to: '/', label: 'CONTACTO', scrollTo: 'contact' },
   ]
 
   const lightGradient = 'bg-gradient-to-r from-[#8FD4C8] to-[#F2D189]'
-  const darkGradient  = 'bg-gradient-to-r from-teal-500 to-pink-500'
+  const darkSolid = 'bg-black'
 
   const handleClick = (link: typeof links[0]) => {
     setMenuOpen(false)
     if (link.scrollTo) {
-      // Si estamos ya en homepage
       if (pathname !== '/') {
         navigate('/')
-        // luego de navegar, esperamos un tick y hacemos scroll
         setTimeout(() => {
           document.getElementById(link.scrollTo!)?.scrollIntoView({ behavior: 'smooth' })
         }, 100)
@@ -49,28 +46,23 @@ export default function Navbar() {
   return (
     <nav
       className={`px-6 sm:px-10 py-6 flex flex-col transition-colors duration-500 ${
-        isLightMode
-          ? `${lightGradient} text-gray-900`
-          : `${darkGradient} text-white`
+        isLightMode ? `${lightGradient} text-gray-900` : `${darkSolid} text-white`
       }`}
     >
       <div className="flex items-center justify-between w-full">
         {/* Logo */}
         <Link to="/" className="flex-shrink-0">
-        <img
-  src={isLightMode ? '/images/LOGOO.png' : '/images/WHITE.png'}
-  alt="Xirena Logo"
-  className="w-24 h-16 md:w-32 md:h-20 lg:w-36 lg:h-24 object-contain"
-/>
-
+          <img
+            src={isLightMode ? '/images/LOGOO.png' : '/images/WHITE.png'}
+            alt="Xirena Logo"
+            className="w-24 h-16 md:w-32 md:h-20 lg:w-36 lg:h-24 object-contain"
+          />
         </Link>
 
         {/* Menú escritorio */}
         <ul
           className={`hidden md:flex space-x-12 pb-2 transition-colors duration-300 ${
-            isLightMode
-              ? 'border-b-2 border-black'
-              : 'border-b-2 border-white/50'
+            isLightMode ? 'border-b-2 border-black' : 'border-b-2 border-white/50'
           }`}
         >
           {links.map((link) => (
@@ -112,7 +104,7 @@ export default function Navbar() {
       {menuOpen && (
         <div
           className={`mt-4 md:hidden transition-colors duration-500 ${
-            isLightMode ? lightGradient : darkGradient
+            isLightMode ? lightGradient : darkSolid
           } border-t border-white/50 pb-4`}
         >
           <ul className="flex flex-col items-center space-y-4">
