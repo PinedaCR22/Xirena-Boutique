@@ -13,8 +13,7 @@ const items = [
     title: 'Métodos de pago seguros',
     desc: [
       'Aceptamos todas las tarjetas Visa y Mastercard',
-      'Depósitos, transferencias, sinpe móvil',
-      'Pago en efectivo cuando se retira en el local',
+      'Depósitos y pagos sinpe móvil',
     ],
   },
   {
@@ -23,8 +22,7 @@ const items = [
     darkColor: 'text-green-300',
     title: 'Estamos para ti',
     desc: [
-      'Whatsapp 6123-7935 para aclarar cualquier duda',
-      'o para ayudarte a finalizar la compra!',
+      'Ponemos a su disposición nuestro whatsapp 6123-7935 para aclarar cualquier duda',
     ],
   },
   {
@@ -40,17 +38,17 @@ const items = [
     darkColor: 'text-yellow-300',
     title: 'Hasta la puerta de tu casa',
     desc: [
-      'Envíos a todo el país por medio de Correos de Costa Rica.',
-      'Te brindamos el número de guía para que puedas dar seguimiento.',
+      'Envíos a todo el país mediante Correos de Costa Rica.',
     ],
   },
 ]
 
 export default function Contact({ isLightMode }: ContactProps) {
-  const bgClass = isLightMode ? 'bg-white' : 'bg-gray-900'
-  const textPrimary = isLightMode ? 'text-gray-900' : 'text-gray-100'
-  const textSecondary = isLightMode ? 'text-gray-700' : 'text-gray-300'
-  const borderColor = isLightMode ? 'border-black' : 'border-white'
+  const bgClass = isLightMode ? 'bg-white' : 'bg-[#f7e6e2]'
+  const textPrimary = isLightMode ? 'text-gray-900' : 'text-black'
+  const textSecondary = isLightMode ? 'text-gray-700' : 'text-black/70'
+  const borderColor = isLightMode ? 'border-black' : 'border-black'
+
 
   return (
     <section className={`py-12 transition-colors duration-300 ${bgClass}`}>

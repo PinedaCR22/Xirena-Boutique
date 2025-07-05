@@ -9,7 +9,7 @@ const Information: React.FC = () => {
     <div
       className={`
         min-h-screen transition-colors duration-500
-        ${isLightMode ? "bg-gray-100 text-gray-900" : "bg-gray-900 text-gray-100"}
+        ${isLightMode ? "bg-gray-100 text-gray-900" : 'bg-[#f7e6e2] text-black'}
       `}
     >
       {/* espacio para el navbar global: reducido */}
@@ -27,7 +27,7 @@ const Information: React.FC = () => {
         <motion.div
           className={`
             w-full flex flex-col md:flex-row items-center
-            ${isLightMode ? "bg-white" : "bg-gray-800"} 
+            ${isLightMode ? "bg-white" : 'bg-[#f7e6e2] text-black'} 
             shadow-lg rounded-lg p-6 mb-10
           `}
           initial={{ opacity: 0, y: 30 }}
@@ -68,7 +68,7 @@ const Information: React.FC = () => {
         <motion.div
           className={`
             w-full flex flex-col md:flex-row-reverse items-center
-            ${isLightMode ? "bg-white" : "bg-gray-800"} 
+            ${isLightMode ? "bg-white" : 'bg-[#f7e6e2] text-black'} 
             shadow-lg rounded-lg p-6 mb-10
           `}
           initial={{ opacity: 0, y: 30 }}
@@ -118,7 +118,7 @@ const Information: React.FC = () => {
         <motion.div
           className={`
             w-full flex flex-col md:flex-row items-center
-            ${isLightMode ? "bg-white" : "bg-gray-800"} 
+            ${isLightMode ? "bg-white" : 'bg-[#f7e6e2] text-black'} 
             shadow-lg rounded-lg p-6
           `}
           initial={{ opacity: 0, y: 30 }}
