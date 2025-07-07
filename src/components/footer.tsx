@@ -7,9 +7,9 @@ export default function Footer() {
   const { scrollTo } = useCategoriesScroll()
 
   const lightGradient = 'bg-gradient-to-r from-[#8FD4C8] to-[#F2D189]'
-  const bgClass = isLightMode ? lightGradient : 'bg-black'
-  const textClass = isLightMode ? 'text-gray-900' : 'text-white'
-  const borderClr = isLightMode ? 'border-black' : 'border-white'
+  const bgClass = isLightMode ? lightGradient : 'bg-[#F3D5D0]'
+  const textClass = isLightMode ? 'text-gray-900' : 'text-black'
+  const borderClr = isLightMode ? 'border-black' : 'border-black'
 
   const categories = ['Bikinis', 'Vestidos', 'Conjuntos', 'Prendas', 'Disfraces']
 

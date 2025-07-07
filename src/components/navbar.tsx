@@ -25,7 +25,9 @@ export default function Navbar() {
   ]
 
   const lightGradient = 'bg-gradient-to-r from-[#8FD4C8] to-[#F2D189]'
-  const darkSolid = 'bg-black'
+const darkSolid = 'bg-[#F3D5D0]'
+
+
 
   const handleClick = (link: typeof links[0]) => {
     setMenuOpen(false)
@@ -46,7 +48,7 @@ export default function Navbar() {
   return (
     <nav
       className={`px-6 sm:px-10 py-6 flex flex-col transition-colors duration-500 ${
-        isLightMode ? `${lightGradient} text-gray-900` : `${darkSolid} text-white`
+        isLightMode ? `${lightGradient} text-gray-900` : `${darkSolid} text-black`
       }`}
     >
       <div className="flex items-center justify-between w-full">
@@ -62,7 +64,7 @@ export default function Navbar() {
         {/* Menú escritorio */}
         <ul
           className={`hidden md:flex space-x-12 pb-2 transition-colors duration-300 ${
-            isLightMode ? 'border-b-2 border-black' : 'border-b-2 border-white/50'
+            isLightMode ? 'border-b-2 border-black' : 'border-b-2 border-black/50'
           }`}
         >
           {links.map((link) => (
