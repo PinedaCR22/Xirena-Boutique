@@ -6,7 +6,7 @@ export interface CategoryProduct {
   price: number
   image: string
   description: string
-  category: 'Bikinis' | 'Vestidos' | 'Conjuntos' | 'Disfraces' | 'Prendas femeninas'
+  category: 'Bikinis' | 'Vestidos' | 'Conjuntos' | 'Disfraces' | 'Crochets'
 }
 
 export const CATEGORY_PRODUCTS: CategoryProduct[] = [
@@ -51,12 +51,12 @@ export const CATEGORY_PRODUCTS: CategoryProduct[] = [
   { id: 52, name: 'Disfraz de Marinera', price: 32000, image: '/images/PRUEBA2.jpg', description: 'Vestido azul con gorro y anclas.', category: 'Disfraces' },
 
   // Prendas femeninas
-  { id: 53, name: 'Top Corto con Encaje', price: 20000, image: '/images/PRUEBA3.jpg', description: 'Top corto negro con detalles de encaje.', category: 'Prendas femeninas' },
-  { id: 54, name: 'Camisa Oversize', price: 27000, image: '/images/PRUEBA4.jpg', description: 'Camisa blanca estilo oversize con bolsillos.', category: 'Prendas femeninas' },
-  { id: 55, name: 'Pantalones Culotte', price: 29000, image: '/images/PRUEBA5.jpg', description: 'Pantalones amplios hasta la pantorrilla.', category: 'Prendas femeninas' },
-  { id: 56, name: 'Crop Top Fluido', price: 21000, image: '/images/PRUEBA1.jpg', description: 'Crop top de tirantes con tela fluida.', category: 'Prendas femeninas' },
-  { id: 57, name: 'Body Transparente', price: 31000, image: '/images/PRUEBA2.jpg', description: 'Body con transparencias y detalles florales.', category: 'Prendas femeninas' },
-  { id: 58, name: 'Blusa con Nudo Frontal', price: 26000, image: '/images/PRUEBA3.jpg', description: 'Blusa con mangas sueltas y nudo.', category: 'Prendas femeninas' },
-  { id: 59, name: 'Falda Mini con Botones', price: 23000, image: '/images/PRUEBA4.jpg', description: 'Falda mini con botones decorativos.', category: 'Prendas femeninas' },
-  { id: 60, name: 'Leggings Texturizados', price: 28000, image: '/images/PRUEBA5.jpg', description: 'Leggings con textura y cintura alta.', category: 'Prendas femeninas' },
+  { id: 53, name: 'Top Corto con Encaje', price: 20000, image: '/images/PRUEBA3.jpg', description: 'Top corto negro con detalles de encaje.', category: 'Crochets' },
+  { id: 54, name: 'Camisa Oversize', price: 27000, image: '/images/PRUEBA4.jpg', description: 'Camisa blanca estilo oversize con bolsillos.', category: 'Crochets' },
+  { id: 55, name: 'Pantalones Culotte', price: 29000, image: '/images/PRUEBA5.jpg', description: 'Pantalones amplios hasta la pantorrilla.', category: 'Crochets' },
+  { id: 56, name: 'Crop Top Fluido', price: 21000, image: '/images/PRUEBA1.jpg', description: 'Crop top de tirantes con tela fluida.', category: 'Crochets' },
+  { id: 57, name: 'Body Transparente', price: 31000, image: '/images/PRUEBA2.jpg', description: 'Body con transparencias y detalles florales.', category: 'Crochets' },
+  { id: 58, name: 'Blusa con Nudo Frontal', price: 26000, image: '/images/PRUEBA3.jpg', description: 'Blusa con mangas sueltas y nudo.', category: 'Crochets' },
+  { id: 59, name: 'Falda Mini con Botones', price: 23000, image: '/images/PRUEBA4.jpg', description: 'Falda mini con botones decorativos.', category: 'Crochets' },
+  { id: 60, name: 'Leggings Texturizados', price: 28000, image: '/images/PRUEBA5.jpg', description: 'Leggings con textura y cintura alta.', category: 'Crochets' },
 ]

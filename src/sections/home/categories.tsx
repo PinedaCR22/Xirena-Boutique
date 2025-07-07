@@ -17,6 +17,9 @@ import { useTheme } from '../../context/ThemeContext'
 import { useModal } from '../../context/ModalContext'
 import { useCategoriesScroll } from '../../context/CategoriesScrollContext'
 import { CATEGORY_PRODUCTS, type CategoryProduct } from '../../data/datacategories'
+import { useLocation } from 'react-router-dom'
+import { useLayoutEffect } from 'react'
+
 
 export type CategoriesHandle = {
   scrollToCategory: (cat: string) => void
@@ -24,6 +27,16 @@ export type CategoriesHandle = {
 
 const Categories = forwardRef<CategoriesHandle>((_props, ref) => {
   const sectionRef = useRef<HTMLElement>(null)
+  const location = useLocation()
+  useLayoutEffect(() => {
+    const params = new URLSearchParams(location.search)
+    const category = params.get('category')
+    if (category) {
+      setSelected(category)
+      setPage(1)
+      sectionRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [location.search])
   const { isLightMode } = useTheme()
   const { showModal, hideModal } = useModal()
   const { register } = useCategoriesScroll()
