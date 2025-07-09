@@ -140,7 +140,7 @@ export default function Checkout() {
   // Estilos según tema
   const cardBg = isLightMode
     ? 'bg-white text-gray-800'
-    : 'bg-gray-800 text-gray-200'
+    : 'bg-[#f7e6e2] text-black'
   const inputBase = 'transition-colors rounded-lg'
   const inputClasses = isLightMode
     ? 'bg-white border border-gray-300 text-gray-800'
@@ -346,7 +346,7 @@ export default function Checkout() {
       className={`py-12 px-4 sm:px-8 lg:px-16 min-h-screen transition-colors ${
         isLightMode
           ? 'bg-white text-gray-800'
-          : 'bg-gray-900 text-gray-200'
+          : 'bg-[#f7e6e2] text-black'
       }`}
     >
       <h1 className="flex items-center mb-6 text-3xl font-bold">
