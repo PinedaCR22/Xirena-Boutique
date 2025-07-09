@@ -23,14 +23,18 @@ export default function Buy() {
   const [page, setPage] = useState(1)
   const perPage = 3
 
-  useEffect(() => {
-    const stored = localStorage.getItem('cart')
-    if (stored) {
-      const parsed: FeatureProduct[] = JSON.parse(stored)
-      const enriched = parsed.map((item) => ({ ...item, quantity: 1 }))
-      setCart(enriched)
-    }
-  }, [])
+  // Buy.tsx
+
+useEffect(() => {
+  const stored = localStorage.getItem('cart')
+  if (stored) {
+    // Aquí esperamos que en localStorage esté guardado un array de CartItem
+    // con la propiedad quantity correcta
+    const parsed: CartItem[] = JSON.parse(stored)
+    setCart(parsed)
+  }
+}, [])
+
 
   const updateQuantity = (id: number, delta: number) => {
     setCart((prev) => {
