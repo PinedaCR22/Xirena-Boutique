@@ -10,11 +10,11 @@ interface CarouselProps {
 }
 
 const slides = [
-  '/images/PRUEBA1.jpg',
-  '/images/PRUEBA2.jpg',
+  '/images/destacado/IMG_9294.JPG',
+  '/images/destacado/IMG_9283.JPG',
   '/images/PRUEBA3.jpg',
   '/images/PRUEBA4.jpg',
-  '/images/PRUEBA5.jpg',
+  '/images/destacado/IMG_1366.PNG',
 ];
 
 export default function Carousel({ isLightMode }: CarouselProps) {
@@ -33,15 +33,12 @@ export default function Carousel({ isLightMode }: CarouselProps) {
           <img
             src={logoSrc}
             alt="Xirena Boutique Logo"
-            className="object-cover object-center w-full h-full"
+            className="object-contain object-center w-full h-full"
           />
-
-          </div>
+        </div>
         {/* Subtítulo llamativo */}
         <p
-          className={`mt-4 font-bold text-2xl md:text-3xl transition-colors duration-300 ${
-            isLightMode ? 'text-black' : 'text-black'
-          }`}
+          className="mt-4 font-bold text-2xl md:text-3xl transition-colors duration-300 text-black"
           style={{ fontFamily: "'Dancing Script', cursive" }}
         >
           ¡Empodera tu estilo!
@@ -74,7 +71,7 @@ export default function Carousel({ isLightMode }: CarouselProps) {
                 <img
                   src={src}
                   alt={`slide-${idx}`}
-                  className="object-cover w-full h-full"
+                  className="object-cover object-top w-full h-full"
                 />
               </div>
             </SwiperSlide>
