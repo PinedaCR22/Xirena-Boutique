@@ -82,7 +82,7 @@ export default function FeaturedProducts({ isLightMode }: FeaturedProductsProps)
         <div className="relative w-full max-w-md">
           <FiSearch
             className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${
-              isLightMode ? 'text-gray-500' : 'text-gray-300'
+              isLightMode ? 'text-gray-500' : 'text-black'
             }`}
           />
           <input
@@ -93,7 +93,7 @@ export default function FeaturedProducts({ isLightMode }: FeaturedProductsProps)
             className={`w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none transition-colors ${
               isLightMode
                 ? 'bg-gray-100 text-black placeholder-gray-500 border-gray-300 focus:border-gray-500'
-                : 'bg-gray-800 text-white placeholder-white border-gray-700 focus:border-white'
+                : 'bg-[#F3D5D0] text-black placeholder-black border-black focus:border-black'
             }`}
           />
         </div>
