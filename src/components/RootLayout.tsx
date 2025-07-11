@@ -17,7 +17,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <ModalProvider>
       <div
         className={`min-h-screen flex flex-col transition-colors duration-500 ${
-          isLightMode ? 'bg-white text-black' : 'bg-gray-900 text-white'
+          isLightMode ? 'bg-white text-black' : 'bg-[#f7e6e2] text-black'
         }`}
       >
         <Navbar />
