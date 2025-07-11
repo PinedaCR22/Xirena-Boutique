@@ -10,7 +10,7 @@ export default function Footer() {
   const textClass = isLightMode ? 'text-gray-900' : 'text-black'
   const borderClr = 'border-black'
 
-  const categories = ['Bikinis', 'Vestidos', 'Conjuntos', 'Disfraces', 'Crochets']
+  const categories = ['Bikinis', 'Tops', 'Salidas de playa', 'Bottoms', 'Crochets', 'Accesorios']
 
   return (
     <footer className={`${bgClass} ${textClass} w-full py-12 px-4 sm:px-8 lg:px-16`}>
