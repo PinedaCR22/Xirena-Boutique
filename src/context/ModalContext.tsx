@@ -2,7 +2,7 @@ import { createContext, useContext, useState } from 'react'
 import type { ReactNode, FC } from 'react'
 import { useTheme } from './ThemeContext'
 import { FiShoppingCart } from 'react-icons/fi'
-import { FaHeartBroken } from 'react-icons/fa'
+import { FaHeartBroken, FaHeart } from 'react-icons/fa'
 
 export type ModalType = 'added' | 'removed' | 'info' | 'error'
 
@@ -53,13 +53,14 @@ export const ModalProvider: FC<{ children: ReactNode }> = ({ children }) => {
     <ModalContext.Provider value={{ showModal, hideModal }}>
       {children}
 
+      {/* Info Modal */}
       {infoModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-40">
           <div
             className={`rounded-lg p-6 text-center transition-colors my-8 w-11/12 max-w-4xl
               ${isLightMode ? 'bg-white text-gray-900' : 'bg-[#f7e6e2] text-black'}`}
           >
-            <h2 className="text-2xl font-semibold mb-4">{infoModal.title}</h2>
+            {/* Se quita el título superior para evitar duplicados */}
             <div className="mb-4">{infoModal.content}</div>
             {infoModal.action && (
               <button
@@ -76,6 +77,7 @@ export const ModalProvider: FC<{ children: ReactNode }> = ({ children }) => {
         </div>
       )}
 
+      {/* Toast Modal */}
       {toastModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div
@@ -83,9 +85,11 @@ export const ModalProvider: FC<{ children: ReactNode }> = ({ children }) => {
               ${isLightMode ? 'bg-white text-gray-900' : 'bg-[#f7e6e2] text-black'}`}
           >
             <div className="text-5xl mb-4">
-              {toastModal.type === 'added' && (
-                <FiShoppingCart className="mx-auto text-green-500" size={32} />
-              )}
+              {toastModal.type === 'added' && toastModal.title === '¡Agregado!' ? (
+                <FaHeart className="mx-auto text-pink-500" size={32} />
+              ) : toastModal.type === 'added' ? (
+                <FiShoppingCart className="mx-auto text-pink-500" size={32} />
+              ) : null}
               {toastModal.type === 'removed' && (
                 <FaHeartBroken className="mx-auto text-red-500" size={32} />
               )}
