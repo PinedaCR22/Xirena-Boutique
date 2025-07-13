@@ -12,8 +12,7 @@ const items = [
     darkColor: 'text-orange-300',
     title: 'Métodos de pago seguros',
     desc: [
-      'Aceptamos todas las tarjetas Visa y Mastercard',
-      'Depósitos y pagos sinpe móvil',
+      'Aceptamos tipps de pago como depósitos y pagos sinpe móvil',
     ],
   },
   {
@@ -22,7 +21,7 @@ const items = [
     darkColor: 'text-green-300',
     title: 'Estamos para ti',
     desc: [
-      'Ponemos a su disposición nuestro whatsapp 6123-7935 para aclarar cualquier duda',
+      'Nuestro whatsapp 6123-7935 para aclarar cualquier duda',
     ],
   },
   {
@@ -30,7 +29,7 @@ const items = [
     lightColor: 'text-pink-500',
     darkColor: 'text-pink-300',
     title: 'Moda femenina para la mujer moderna y empoderada.',
-    desc: ['Moda para vos.'],
+    desc: ['Moda totalmente a la medida para vos.'],
   },
   {
     icon: FaTruck,

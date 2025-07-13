@@ -62,9 +62,9 @@ const AboutUsBoutique: React.FC = () => {
         viewport={{ once: true }}
         transition={{ duration: 0.6, delay: 0.4 }}
       >
-        <h2 className="text-3xl font-bold mb-4">Sobre Xirena Boutique</h2>
+        <h2 className="text-3xl font-bold mb-4">Sobre Xirena Design</h2>
         <p className="text-lg mb-6">
-          En Xirena Boutique confeccionamos prendas únicas que celebran la feminidad
+          En Xirena Design confeccionamos prendas únicas que celebran la feminidad
           y la autenticidad de cada mujer. Nos especializamos en bikinis, vestidos
           y conjuntos hechos a mano con amor y dedicación. Nuestro objetivo es que cada clienta se sienta cómoda, hermosa y segura al vestir nuestras piezas.
         </p>
