@@ -23,7 +23,7 @@ export default function Footer() {
             alt="Xirena Boutique"
             className="h-24 w-auto mb-3 object-contain"
           />
-          <span className="font-bold text-xl">Xirena Boutique</span>
+          <span className="font-bold text-xl">Xirena Design</span>
         </div>
 
         {/* Contacto */}
@@ -60,7 +60,7 @@ export default function Footer() {
                 className="flex items-center gap-2 whitespace-nowrap"
               >
                 <FaInstagram className="text-2xl shrink-0" />
-                <span className={textClass}>: xirenaboutique</span>
+                <span className={textClass}>: xirena_design</span>
               </a>
             </li>
             <li>

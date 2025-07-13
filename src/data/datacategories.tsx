@@ -7,7 +7,7 @@ export interface CategoryProduct {
   image: string
   description: string
   // Aquí corregimos el literal de 'Crochet' a 'Crochets' para que coincida con los datos
-  category: 'Bikinis' | 'Tops' | 'Salidas de playa' | 'Bottoms' | 'Crochets' | 'Accesorios'
+  category: 'Bikinis' | 'Tops' | 'Salidas de playa' | 'Bottoms' | 'Crochet' | 'Accesorios'
   quantity: number
 }
 
@@ -52,22 +52,22 @@ export const CATEGORY_PRODUCTS: CategoryProduct[] = [
   { id: 52, name: 'Disfraz de Marinera',   price: 32000, image: '/images/PRUEBA2.jpg', description: 'Vestido azul con gorro y anclas.',                     category: 'Bottoms',  quantity: 1 },
 
   // Crochets
-  { id: 53, name: 'Afrodita Top',         price: 22800, image: '/images/categories/crochets/AFRODITA TOP (22,800).JPG', description: 'Top de crochet con textura calada y tirantes finos.', category: 'Crochets', quantity: 1 },
-  { id: 54, name: 'Althea Bikini',         price: 22600, image: '/images/categories/crochets/ALTHEA BIKINI (22,600).JPG', description: 'Bikini de crochet con tirantes ajustables.',          category: 'Crochets', quantity: 1 },
-  { id: 55, name: 'Athena Bikini',         price: 23600, image: '/images/categories/crochets/ATHENA BIKINI (23,600).JPG', description: 'Bikini de crochet con motivos clásicos.',              category: 'Crochets', quantity: 1 },
-  { id: 56, name: 'Aya Top',               price: 17600, image: '/images/categories/crochets/AYA TOP (17,600).JPG', description: 'Top de crochet con escote cuadrado y detalle en la espalda.', category: 'Crochets', quantity: 1 },
-  { id: 57, name: 'Conjunto Selene',       price: 31300, image: '/images/categories/crochets/CONJUNTO SELENE (31,300).JPG', description: 'Conjunto de crochet con top y falda coordinados.',   category: 'Crochets', quantity: 1 },
-  { id: 58, name: 'Freya Top',             price: 26750, image: '/images/categories/crochets/FREYA TOP (26,750).JPG', description: 'Top de crochet calado con patrón delicado.',          category: 'Crochets', quantity: 1 },
-  { id: 59, name: 'Gaia Bikini',           price: 21200, image: '/images/categories/crochets/GAIA bikini (21,200).JPG', description: 'Bikini de crochet con ribetes ondulados.',            category: 'Crochets', quantity: 1 },
-  { id: 60, name: 'Hera Top',              price: 17500, image: '/images/categories/crochets/HERA TOP (17,500).JPG', description: 'Top de crochet asimétrico con detalle artesanal.',    category: 'Crochets', quantity: 1 },
-  { id: 61, name: 'Kali Salida de Playa',  price: 16800, image: '/images/categories/crochets/KALI SALIDA DE PLAYA (16,800).JPG', description: 'Salida de playa de crochet con flecos en el borde.', category: 'Crochets', quantity: 1 },
-  { id: 62, name: 'Nefertari Bikini',      price: 23400, image: '/images/categories/crochets/NEFERTARI BIKINI (23,400).JPG', description: 'Bikini de crochet con inspiración egipcia y volantes.', category: 'Crochets', quantity: 1 },
-  { id: 63, name: 'Noa Top',               price: 15300, image: '/images/categories/crochets/NOA TOP (15,300).JPG', description: 'Top de crochet ligero con tirantes ajustables.',      category: 'Crochets', quantity: 1 },
-  { id: 64, name: 'Nyx Top',               price: 14600, image: '/images/categories/crochets/NYX TOP (14,600).JPG', description: 'Top de crochet de escote pronunciado y textura suave.',category: 'Crochets', quantity: 1 },
-  { id: 65, name: 'Set Innana',            price: 35800, image: '/images/categories/crochets/SET INNANA ( 35,800).JPG', description: 'Set de crochet con top y pantalón estilo bohemio.',   category: 'Crochets', quantity: 1 },
-  { id: 66, name: 'Thalía Top',            price: 17300, image: '/images/categories/crochets/THALÍA TOP (17,300).JPG', description: 'Top de crochet con volantes delicados y escote corazón.', category: 'Crochets', quantity: 1 },
-  { id: 67, name: 'Venus Top',             price: 16700, image: '/images/categories/crochets/VENUS TOP (16,700).JPG', description: 'Top de crochet con hombros descubiertos.',             category: 'Crochets', quantity: 1 },
-  { id: 68, name: 'Zafiro Bikini',         price: 23800, image: '/images/categories/crochets/ZAFIRO BIKINI (23,800).JPG', description: 'Bikini de crochet con detalles brillantes.',          category: 'Crochets', quantity: 1 },
+  { id: 53, name: 'Afrodita Top',         price: 22800, image: '/images/categories/crochets/AFRODITA TOP (22,800).JPG', description: 'Top de crochet con textura calada y tirantes finos.', category: 'Crochet', quantity: 1 },
+  { id: 54, name: 'Althea Bikini',         price: 22600, image: '/images/categories/crochets/ALTHEA BIKINI (22,600).JPG', description: 'Bikini de crochet con tirantes ajustables.',          category: 'Crochet', quantity: 1 },
+  { id: 55, name: 'Athena Bikini',         price: 23600, image: '/images/categories/crochets/ATHENA BIKINI (23,600).JPG', description: 'Bikini de crochet con motivos clásicos.',              category: 'Crochet', quantity: 1 },
+  { id: 56, name: 'Aya Top',               price: 17600, image: '/images/categories/crochets/AYA TOP (17,600).JPG', description: 'Top de crochet con escote cuadrado y detalle en la espalda.', category: 'Crochet', quantity: 1 },
+  { id: 57, name: 'Conjunto Selene',       price: 31300, image: '/images/categories/crochets/CONJUNTO SELENE (31,300).JPG', description: 'Conjunto de crochet con top y falda coordinados.',   category: 'Crochet', quantity: 1 },
+  { id: 58, name: 'Freya Top',             price: 26750, image: '/images/categories/crochets/FREYA TOP (26,750).JPG', description: 'Top de crochet calado con patrón delicado.',          category: 'Crochet', quantity: 1 },
+  { id: 59, name: 'Gaia Bikini',           price: 21200, image: '/images/categories/crochets/GAIA bikini (21,200).JPG', description: 'Bikini de crochet con ribetes ondulados.',            category: 'Crochet', quantity: 1 },
+  { id: 60, name: 'Hera Top',              price: 17500, image: '/images/categories/crochets/HERA TOP (17,500).JPG', description: 'Top de crochet asimétrico con detalle artesanal.',    category: 'Crochet', quantity: 1 },
+  { id: 61, name: 'Kali Salida de Playa',  price: 16800, image: '/images/categories/crochets/KALI SALIDA DE PLAYA (16,800).JPG', description: 'Salida de playa de crochet con flecos en el borde.', category: 'Crochet', quantity: 1 },
+  { id: 62, name: 'Nefertari Bikini',      price: 23400, image: '/images/categories/crochets/NEFERTARI BIKINI (23,400).JPG', description: 'Bikini de crochet con inspiración egipcia y volantes.', category: 'Crochet', quantity: 1 },
+  { id: 63, name: 'Noa Top',               price: 15300, image: '/images/categories/crochets/NOA TOP (15,300).JPG', description: 'Top de crochet ligero con tirantes ajustables.',      category: 'Crochet', quantity: 1 },
+  { id: 64, name: 'Nyx Top',               price: 14600, image: '/images/categories/crochets/NYX TOP (14,600).JPG', description: 'Top de crochet de escote pronunciado y textura suave.',category: 'Crochet', quantity: 1 },
+  { id: 65, name: 'Set Innana',            price: 35800, image: '/images/categories/crochets/SET INNANA ( 35,800).JPG', description: 'Set de crochet con top y pantalón estilo bohemio.',   category: 'Crochet', quantity: 1 },
+  { id: 66, name: 'Thalía Top',            price: 17300, image: '/images/categories/crochets/THALÍA TOP (17,300).JPG', description: 'Top de crochet con volantes delicados y escote corazón.', category: 'Crochet', quantity: 1 },
+  { id: 67, name: 'Venus Top',             price: 16700, image: '/images/categories/crochets/VENUS TOP (16,700).JPG', description: 'Top de crochet con hombros descubiertos.',             category: 'Crochet', quantity: 1 },
+  { id: 68, name: 'Zafiro Bikini',         price: 23800, image: '/images/categories/crochets/ZAFIRO BIKINI (23,800).JPG', description: 'Bikini de crochet con detalles brillantes.',          category: 'Crochet', quantity: 1 },
 
   // Accesorios
   { id: 69, name: 'Top Corto con Encaje',  price: 20000, image: '/images/PRUEBA3.jpg', description: 'Top corto negro con detalles de encaje.',             category: 'Accesorios', quantity: 1 },
