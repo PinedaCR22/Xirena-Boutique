@@ -1,3 +1,4 @@
+// src/context/ModalContext.tsx
 import { createContext, useContext, useState } from 'react'
 import type { ReactNode, FC } from 'react'
 import { useTheme } from './ThemeContext'
@@ -55,12 +56,12 @@ export const ModalProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
       {/* Info Modal */}
       {infoModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-40">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div
             className={`rounded-lg p-6 text-center transition-colors my-8 w-11/12 max-w-4xl
               ${isLightMode ? 'bg-white text-gray-900' : 'bg-[#f7e6e2] text-black'}`}
           >
-            {/* Se quita el título superior para evitar duplicados */}
+            {/* Contenido con título interno definido en content */}
             <div className="mb-4">{infoModal.content}</div>
             {infoModal.action && (
               <button
