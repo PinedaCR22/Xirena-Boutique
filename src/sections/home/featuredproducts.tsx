@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import type { ChangeEvent } from 'react'
+// src/components/FeaturedProducts.tsx
+import { useState, useEffect, type ChangeEvent } from 'react'
 import {
   FiSearch,
   FiInfo,
@@ -34,7 +34,7 @@ export default function FeaturedProducts({ isLightMode }: FeaturedProductsProps)
     if (c) setCart(JSON.parse(c))
   }, [])
 
-  const filtered = ALL_PRODUCTS.filter(p =>
+  const filtered = ALL_PRODUCTS.filter((p) =>
     p.name.toLowerCase().includes(search.toLowerCase())
   )
   const pageCount = Math.ceil(filtered.length / perPage)
@@ -46,27 +46,115 @@ export default function FeaturedProducts({ isLightMode }: FeaturedProductsProps)
   }
 
   const toggleWishlist = (prod: FeatureProduct) => {
-    const exists = wishlist.some(p => p.id === prod.id)
-    const next = exists ? wishlist.filter(p => p.id !== prod.id) : [...wishlist, prod]
+    const exists = wishlist.some((p) => p.id === prod.id)
+    const next = exists ? wishlist.filter((p) => p.id !== prod.id) : [...wishlist, prod]
     showModal({
       type: exists ? 'removed' : 'added',
       title: exists ? '¡Eliminado!' : '¡Agregado!',
-      message: exists ? `${prod.name} fue removido` : `${prod.name} fue agregado a deseos`,
+      message: exists
+        ? `${prod.name} fue removido de deseos`
+        : `${prod.name} fue agregado a deseos`,
     })
     setWishlist(next)
     localStorage.setItem('wishlist', JSON.stringify(next))
   }
 
   const toggleCart = (prod: FeatureProduct) => {
-    const exists = cart.some(p => p.id === prod.id)
-    const next = exists ? cart.filter(p => p.id !== prod.id) : [...cart, prod]
+    const exists = cart.some((p) => p.id === prod.id)
+    const next = exists ? cart.filter((p) => p.id !== prod.id) : [...cart, prod]
     showModal({
       type: exists ? 'removed' : 'added',
       title: exists ? '¡Eliminado!' : '¡Agregado al carrito!',
-      message: exists ? `${prod.name} se removió del carrito` : `${prod.name} se agregó al carrito`,
+      message: exists
+        ? `${prod.name} se removió del carrito`
+        : `${prod.name} se agregó al carrito`,
     })
     setCart(next)
     localStorage.setItem('cart', JSON.stringify(next))
+  }
+
+  const openInfo = (prod: FeatureProduct) => {
+    showModal({
+      type: 'info',
+      title: prod.name,
+      content: (
+        <div className="flex flex-col lg:flex-row gap-6">
+          <div
+            className="w-full lg:w-1/2 overflow-hidden group cursor-pointer"
+            onClick={() => openInfo(prod)}
+          >
+            <img
+              src={prod.image}
+              alt={prod.name}
+              className="rounded-lg w-full h-80 object-cover transition-all duration-500 group-hover:object-top"
+            />
+          </div>
+          <div className="w-full lg:w-1/2 flex flex-col justify-between p-4">
+            <h2 className="text-2xl font-semibold mb-2">{prod.name}</h2>
+            <p className="mb-4">{prod.description}</p>
+            <span className="font-bold text-pink-500 mb-4 block">
+              ₡{prod.price.toLocaleString()}
+            </span>
+            <div className="flex justify-center items-center space-x-2 mb-4 lg:hidden">
+              <button
+                onClick={() => toggleWishlist(prod)}
+                className={`p-2 rounded ${
+                  wishlist.some((p) => p.id === prod.id)
+                    ? 'bg-pink-500 text-white'
+                    : 'bg-gray-200 text-black hover:bg-gray-300'
+                }`}
+              >
+                {wishlist.some((p) => p.id === prod.id) ? <FaHeart /> : <HeartOutline />}
+              </button>
+              <button
+                onClick={() => toggleCart(prod)}
+                className={`p-2 rounded ${
+                  cart.some((p) => p.id === prod.id)
+                    ? 'bg-pink-500 text-white'
+                    : 'bg-gray-200 text-black hover:bg-gray-300'
+                }`}
+              >
+                <FiShoppingCart />
+              </button>
+              <button
+                onClick={() => hideModal()}
+                className="p-2 rounded bg-gray-200 text-black hover:bg-gray-300"
+              >
+                Regresar
+              </button>
+            </div>
+            <div className="hidden lg:flex justify-end space-x-2">
+              <button
+                onClick={() => toggleWishlist(prod)}
+                className={`px-4 py-2 rounded ${
+                  wishlist.some((p) => p.id === prod.id)
+                    ? 'bg-pink-500 text-white'
+                    : 'bg-gray-200 text-black hover:bg-gray-300'
+                }`}
+              >
+                {wishlist.some((p) => p.id === prod.id) ? <FaHeart /> : <HeartOutline />}
+              </button>
+              <button
+                onClick={() => toggleCart(prod)}
+                className={`px-4 py-2 rounded ${
+                  cart.some((p) => p.id === prod.id)
+                    ? 'bg-pink-500 text-white'
+                    : 'bg-gray-200 text-black hover:bg-gray-300'
+                }`}
+              >
+                <FiShoppingCart />
+              </button>
+              <button
+                onClick={() => hideModal()}
+                className="px-4 py-2 rounded bg-gray-200 text-black hover:bg-gray-300"
+              >
+                Regresar
+              </button>
+            </div>
+          </div>
+        </div>
+      ),
+    })
   }
 
   return (
@@ -77,7 +165,6 @@ export default function FeaturedProducts({ isLightMode }: FeaturedProductsProps)
       }`}
     >
       <h2 className="text-4xl font-bold text-center mb-8">¡Productos Destacados!</h2>
-
       <div className="flex justify-center mb-10">
         <div className="relative w-full max-w-md">
           <FiSearch
@@ -98,12 +185,10 @@ export default function FeaturedProducts({ isLightMode }: FeaturedProductsProps)
           />
         </div>
       </div>
-
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-        {pageItems.map(prod => {
-          const inWishlist = wishlist.some(p => p.id === prod.id)
-          const inCart = cart.some(p => p.id === prod.id)
-
+        {pageItems.map((prod) => {
+          const inWishlist = wishlist.some((p) => p.id === prod.id)
+          const inCart = cart.some((p) => p.id === prod.id)
           return (
             <div
               key={prod.id}
@@ -111,14 +196,16 @@ export default function FeaturedProducts({ isLightMode }: FeaturedProductsProps)
                 isLightMode ? 'bg-white text-black' : 'bg-[#f7e6e2] text-black'
               }`}
             >
-              <div className="h-48 overflow-hidden group">
+              <div
+                className="h-48 overflow-hidden group cursor-pointer"
+                onClick={() => openInfo(prod)}
+              >
                 <img
                   src={prod.image}
                   alt={prod.name}
                   className="w-full h-full object-cover transition-all duration-500 group-hover:object-top"
                 />
               </div>
-
               <div className="p-4">
                 <h3 className="text-lg font-semibold mb-1">{prod.name}</h3>
                 <span className="text-pink-500 font-bold block mb-4">
@@ -127,88 +214,7 @@ export default function FeaturedProducts({ isLightMode }: FeaturedProductsProps)
                 <div className="flex justify-end gap-4 text-xl">
                   <button
                     aria-label="Más info"
-                    onClick={() =>
-                      showModal({
-                        type: 'info',
-                        title: prod.name,
-                        content: (
-                          <div className="flex flex-col lg:flex-row gap-6">
-                            <div className="w-full lg:w-1/2">
-                              <img
-                                src={prod.image}
-                                alt={prod.name}
-                                className="rounded-lg w-full object-cover"
-                              />
-                            </div>
-                            <div className="w-full lg:w-1/2 flex flex-col justify-between p-4">
-                              <h2 className="text-2xl font-semibold mb-2">{prod.name}</h2>
-                              <p className="mb-4">{prod.description}</p>
-                              <span className="font-bold text-pink-500 mb-4 block">
-                                ₡{prod.price.toLocaleString()}
-                              </span>
-                              <div className="flex justify-center items-center space-x-2 mb-4 lg:hidden">
-                                <button
-                                  onClick={() => toggleWishlist(prod)}
-                                  className={`p-2 rounded ${
-                                    inWishlist
-                                      ? 'bg-pink-500 text-white'
-                                      : 'bg-gray-200 text-black hover:bg-gray-300'
-                                  }`}
-                                >
-                                  {inWishlist ? <FaHeart /> : <HeartOutline />}
-                                </button>
-                                <button
-                                  onClick={() => toggleCart(prod)}
-                                  className={`p-2 rounded ${
-                                    inCart
-                                      ? 'bg-pink-500 text-white'
-                                      : 'bg-gray-200 text-black hover:bg-gray-300'
-                                  }`}
-                                >
-                                  <FiShoppingCart />
-                                </button>
-                                <button
-                                  onClick={() => hideModal()}
-
-                                  className="p-2 rounded bg-gray-200 text-black hover:bg-gray-300"
-                                >
-                                  Regresar
-                                </button>
-                              </div>
-                              <div className="hidden lg:flex justify-end space-x-2">
-                                <button
-                                  onClick={() => toggleWishlist(prod)}
-                                  className={`px-4 py-2 rounded ${
-                                    inWishlist
-                                      ? 'bg-pink-500 text-white'
-                                      : 'bg-gray-200 text-black hover:bg-gray-300'
-                                  }`}
-                                >
-                                  {inWishlist ? <FaHeart /> : <HeartOutline />}
-                                </button>
-                                <button
-                                  onClick={() => toggleCart(prod)}
-                                  className={`px-4 py-2 rounded ${
-                                    inCart
-                                      ? 'bg-pink-500 text-white'
-                                      : 'bg-gray-200 text-black hover:bg-gray-300'
-                                  }`}
-                                >
-                                  <FiShoppingCart />
-                                </button>
-                                <button
-                                  onClick={() => hideModal()}
-
-                                  className="px-4 py-2 rounded bg-gray-200 text-black hover:bg-gray-300"
-                                >
-                                  Regresar
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        ),
-                      })
-                    }
+                    onClick={() => openInfo(prod)}
                     className="hover:text-pink-500 transition-colors"
                   >
                     <FiInfo />
@@ -216,18 +222,14 @@ export default function FeaturedProducts({ isLightMode }: FeaturedProductsProps)
                   <button
                     aria-label="Deseos"
                     onClick={() => toggleWishlist(prod)}
-                    className={`transition-colors ${
-                      inWishlist ? 'text-pink-500' : 'hover:text-pink-500'
-                    }`}
+                    className={`transition-colors ${inWishlist ? 'text-pink-500' : 'hover:text-pink-500'}`}
                   >
                     {inWishlist ? <FaHeart /> : <HeartOutline />}
                   </button>
                   <button
                     aria-label="Carrito"
                     onClick={() => toggleCart(prod)}
-                    className={`transition-colors ${
-                      inCart ? 'text-pink-500' : 'hover:text-pink-500'
-                    }`}
+                    className={`transition-colors ${inCart ? 'text-pink-500' : 'hover:text-pink-500'}`}
                   >
                     <FiShoppingCart />
                   </button>
@@ -237,10 +239,9 @@ export default function FeaturedProducts({ isLightMode }: FeaturedProductsProps)
           )
         })}
       </div>
-
       <div className="mt-10 flex justify-center space-x-2">
         <button
-          onClick={() => setPage(p => Math.max(1, p - 1))}
+          onClick={() => setPage((p) => Math.max(1, p - 1))}
           disabled={page === 1}
           className="p-2 rounded border border-black bg-white disabled:opacity-50"
         >
@@ -251,16 +252,14 @@ export default function FeaturedProducts({ isLightMode }: FeaturedProductsProps)
             key={i + 1}
             onClick={() => setPage(i + 1)}
             className={`w-8 h-8 flex items-center justify-center rounded border border-black ${
-              page === i + 1
-                ? 'bg-pink-500 text-white'
-                : 'bg-white text-black hover:bg-gray-100'
+              page === i + 1 ? 'bg-pink-500 text-white' : 'bg-white text-black hover:bg-gray-100'
             }`}
           >
             {i + 1}
           </button>
         ))}
         <button
-          onClick={() => setPage(p => Math.min(pageCount, p + 1))}
+          onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
           disabled={page === pageCount}
           className="p-2 rounded border border-black bg-white disabled:opacity-50"
         >

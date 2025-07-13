@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react'
+// src/components/Navbar.tsx
+import { useState, useEffect, type ReactElement } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import {
   FiHeart,
@@ -10,20 +11,36 @@ import {
 } from 'react-icons/fi'
 import { useTheme } from '../context/ThemeContext'
 
-export default function Navbar() {
+export default function Navbar(): ReactElement {
   const { isLightMode, toggleMode } = useTheme()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [wishCount, setWishCount] = useState(0)
+  const [cartCount, setCartCount] = useState(0)
   const navigate = useNavigate()
   const { pathname } = useLocation()
 
-  // Ajustar padding superior del body para que el contenido no quede oculto
+  // Actualiza contadores leyendo localStorage
+  const updateCounts = () => {
+    const w = JSON.parse(localStorage.getItem('wishlist') ?? '[]')
+    const c = JSON.parse(localStorage.getItem('cart') ?? '[]')
+    setWishCount(Array.isArray(w) ? w.length : 0)
+    setCartCount(Array.isArray(c) ? c.length : 0)
+  }
+
   useEffect(() => {
-    const navHeight = '4rem' // altura del navbar
-    document.body.style.paddingTop = navHeight
+    // Ajusta padding para el navbar fijo
+    document.body.style.paddingTop = '4rem'
+    updateCounts()
+    // Escucha eventos de storage (ej. desde otras pestañas)
+    window.addEventListener('storage', updateCounts)
     return () => {
       document.body.style.paddingTop = ''
+      window.removeEventListener('storage', updateCounts)
     }
   }, [])
+
+  // Si cambias rutas que usan same-tab localStorage.setItem,
+  // puedes forzar manualmente updateCounts tras esos cambios.
 
   const links = [
     { to: '/', label: 'INICIO' },
@@ -55,9 +72,7 @@ export default function Navbar() {
   return (
     <nav
       className={`fixed top-0 left-0 w-full px-6 sm:px-10 py-4 flex flex-col transition-colors duration-500 z-50 ${
-        isLightMode
-          ? `${lightGradient} text-gray-900`
-          : `${darkSolid} text-black`
+        isLightMode ? `${lightGradient} text-gray-900` : `${darkSolid} text-black`
       }`}
     >
       <div className="flex items-center justify-between w-full">
@@ -88,7 +103,7 @@ export default function Navbar() {
           ))}
         </ul>
 
-        {/* Icons + toggle + hamburger */}
+        {/* Íconos + toggle + hamburger */}
         <div className="flex items-center space-x-3 md:space-x-5 text-xl md:text-2xl lg:text-3xl">
           <button
             onClick={toggleMode}
@@ -96,18 +111,34 @@ export default function Navbar() {
           >
             {isLightMode ? <FiMoon /> : <FiSun />}
           </button>
+
+          {/* Wishlist icon with badge */}
           <button
             onClick={() => navigate('/wishes')}
-            className="hover:opacity-80 transition"
+            className="relative hover:opacity-80 transition"
           >
             <FiHeart />
+            {wishCount > 0 && (
+              <span className="absolute -top-1 -right-1 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white bg-red-600 rounded-full">
+                {wishCount}
+              </span>
+            )}
           </button>
+
+          {/* Cart icon with badge */}
           <button
             onClick={() => navigate('/cart')}
-            className="hover:opacity-80 transition"
+            className="relative hover:opacity-80 transition"
           >
             <FiShoppingCart />
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-1 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white bg-red-600 rounded-full">
+                {cartCount}
+              </span>
+            )}
           </button>
+
+          {/* Hamburger mobile */}
           <button
             className="md:hidden hover:opacity-80 transition"
             onClick={() => setMenuOpen((o) => !o)}
