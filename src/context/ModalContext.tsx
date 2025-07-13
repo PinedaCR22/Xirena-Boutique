@@ -61,7 +61,7 @@ export const ModalProvider: FC<{ children: ReactNode }> = ({ children }) => {
             className={`rounded-lg p-6 text-center transition-colors my-8 w-11/12 max-w-4xl
               ${isLightMode ? 'bg-white text-gray-900' : 'bg-[#f7e6e2] text-black'}`}
           >
-            {/* Contenido con título interno definido en content */}
+            {/* Mostramos sólo el contenido, el título se define dentro de content */}
             <div className="mb-4">{infoModal.content}</div>
             {infoModal.action && (
               <button
