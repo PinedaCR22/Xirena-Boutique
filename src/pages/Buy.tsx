@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react'
+// src/components/Buy.tsx
+import { useState, useEffect, type ReactElement } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   FiShoppingCart,
@@ -14,7 +15,7 @@ interface CartItem extends FeatureProduct {
   quantity: number
 }
 
-export default function Buy() {
+export default function Buy(): ReactElement {
   const { isLightMode } = useTheme()
   const { showModal } = useModal()
   const navigate = useNavigate()
@@ -23,22 +24,27 @@ export default function Buy() {
   const [page, setPage] = useState(1)
   const perPage = 3
 
-  // Buy.tsx
+  // cargar carrito
+  useEffect(() => {
+    const stored = localStorage.getItem('cart')
+    if (stored) {
+      setCart(JSON.parse(stored))
+    }
+  }, [])
 
-useEffect(() => {
-  const stored = localStorage.getItem('cart')
-  if (stored) {
-    // Aquí esperamos que en localStorage esté guardado un array de CartItem
-    // con la propiedad quantity correcta
-    const parsed: CartItem[] = JSON.parse(stored)
-    setCart(parsed)
+  // helper para guardar y ajustar página si es necesario
+  const saveCart = (updated: CartItem[]) => {
+    localStorage.setItem('cart', JSON.stringify(updated))
+    setCart(updated)
+    // ajusta página si la página actual ya no tiene items
+    if ((page - 1) * perPage >= updated.length && page > 1) {
+      setPage(p => p - 1)
+    }
   }
-}, [])
-
 
   const updateQuantity = (id: number, delta: number) => {
-    setCart((prev) => {
-      const updated = prev.map((item) => {
+    const updated = cart
+      .map(item => {
         if (item.id === id) {
           const newQty = item.quantity + delta
           if (newQty < 1) {
@@ -52,18 +58,27 @@ useEffect(() => {
           return { ...item, quantity: newQty }
         }
         return item
-      }).filter(Boolean) as CartItem[]
-      localStorage.setItem('cart', JSON.stringify(updated))
-      return updated
+      })
+      .filter(Boolean) as CartItem[]
+
+    saveCart(updated)
+  }
+
+  const clearCart = () => {
+    saveCart([])
+    setPage(1)
+    showModal({
+      type: 'removed',
+      title: '¡Vaciado!',
+      message: '¡Tu carrito ha sido vaciado!',
     })
   }
 
   const pageCount = Math.ceil(cart.length / perPage)
   const pageItems = cart.slice((page - 1) * perPage, page * perPage)
-
   const totalAmount = cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
-  if (!cart.length) {
+  if (cart.length === 0) {
     return (
       <div
         className={`min-h-[60vh] flex flex-col items-center justify-center transition-colors duration-300 ${
@@ -95,6 +110,7 @@ useEffect(() => {
       </h1>
 
       <div className="flex flex-col lg:flex-row gap-8">
+        {/* Tabla de items */}
         <div className="overflow-x-auto flex-1">
           <table className="min-w-full border-collapse">
             <thead>
@@ -105,7 +121,7 @@ useEffect(() => {
               </tr>
             </thead>
             <tbody>
-              {pageItems.map((prod) => (
+              {pageItems.map(prod => (
                 <tr key={prod.id}>
                   <td className="px-4 py-3 border-b text-center">
                     <div className="inline-flex flex-col items-center space-y-2">
@@ -149,7 +165,7 @@ useEffect(() => {
           {pageCount > 1 && (
             <div className="mt-10 flex justify-center space-x-2">
               <button
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                onClick={() => setPage(p => Math.max(1, p - 1))}
                 disabled={page === 1}
                 className="p-2 rounded border border-gray-400 bg-white text-black disabled:opacity-50"
               >
@@ -169,7 +185,7 @@ useEffect(() => {
                 </button>
               ))}
               <button
-                onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+                onClick={() => setPage(p => Math.min(pageCount, p + 1))}
                 disabled={page === pageCount}
                 className="p-2 rounded border border-gray-400 bg-white text-black disabled:opacity-50"
               >
@@ -192,15 +208,20 @@ useEffect(() => {
           </div>
           <div className="flex flex-col space-y-3">
             <button
-  onClick={() => navigate('/checkout')}
-  className="w-full px-6 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 transition"
->
-  Continuar compra
-</button>
-
+              onClick={() => navigate('/checkout')}
+              className="w-full px-6 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 transition"
+            >
+              Continuar compra
+            </button>
+            <button
+              onClick={clearCart}
+              className="w-full px-6 py-2 bg-gray-200 text-black rounded hover:bg-gray-300 transition"
+            >
+              Vaciar carrito
+            </button>
             <button
               onClick={() => navigate(-1)}
-              className="px-6 py-2 bg-gray-200 text-black hover:bg-gray-300 rounded"
+              className="w-full px-6 py-2 bg-gray-200 text-black hover:bg-gray-300 rounded transition"
             >
               Regresar
             </button>

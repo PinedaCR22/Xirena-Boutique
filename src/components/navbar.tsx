@@ -19,7 +19,6 @@ export default function Navbar(): ReactElement {
   const navigate = useNavigate()
   const { pathname } = useLocation()
 
-  // Actualiza contadores leyendo localStorage
   const updateCounts = () => {
     const w = JSON.parse(localStorage.getItem('wishlist') ?? '[]')
     const c = JSON.parse(localStorage.getItem('cart') ?? '[]')
@@ -31,16 +30,20 @@ export default function Navbar(): ReactElement {
     // Ajusta padding para el navbar fijo
     document.body.style.paddingTop = '4rem'
     updateCounts()
-    // Escucha eventos de storage (ej. desde otras pestañas)
+
+    // Escucha eventos de storage (otras pestañas)
     window.addEventListener('storage', updateCounts)
+    // Escucha eventos personalizados (misma pestaña)
+    window.addEventListener('cartUpdated', updateCounts)
+    window.addEventListener('wishUpdated', updateCounts)
+
     return () => {
       document.body.style.paddingTop = ''
       window.removeEventListener('storage', updateCounts)
+      window.removeEventListener('cartUpdated', updateCounts)
+      window.removeEventListener('wishUpdated', updateCounts)
     }
   }, [])
-
-  // Si cambias rutas que usan same-tab localStorage.setItem,
-  // puedes forzar manualmente updateCounts tras esos cambios.
 
   const links = [
     { to: '/', label: 'INICIO' },
