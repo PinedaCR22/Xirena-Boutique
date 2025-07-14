@@ -5,7 +5,7 @@ import { useModal } from '../../context/ModalContext'
 import { useFormValidation, type FieldConfig } from '../../hooks/useFormValidation'
 import type { FeatureProduct } from '../../data/datafeatures'
 import { validationConfig } from '../../data/checkoutConfig'
-import { FiCheckCircle } from 'react-icons/fi'
+import { FiCheckCircle, FiUpload, FiLoader } from 'react-icons/fi'
 
 // ----------------------------------------
 // Tipos
@@ -25,6 +25,8 @@ export interface UseCheckoutFormResult {
   formData: Record<string, any>
   paymentFile: File | null
   fileError: string
+  isUploading: boolean
+  uploadProgress: number
   getInputClasses: (field: string) => string
   getSelectClasses: (field: string) => string
   handleInputChange: (
@@ -173,143 +175,199 @@ export function useCheckoutForm(
     if (mergedConfig[field]) validateSingleField(field, value)
   }
 
-  // Helper para renderizar siempre la versión actual del modal
-  const renderPaymentModal = useCallback(() => ({
-    type: 'info' as const,
-    title: 'Pago por Sinpe Móvil',
-    content: (
-      <div className="space-y-4 text-center">
-        <img src="/images/sinpe.png" alt="Sinpe Móvil" className="mx-auto h-16" />
-        <p>Depositar el 50% del monto total a:</p>
-        <p className="font-semibold">Número: 8888-8888</p>
-        <p className="font-semibold">
-          Monto a depositar: ₡{Math.floor(totalAmount / 2).toLocaleString()}
-        </p>
-
-        <label className="block border-2 border-dashed rounded p-6 cursor-pointer">
-          <input
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={handleFileUpload}
-          />
-          <span className="text-sm text-gray-500">
-            Haz clic para subir comprobante de pago
-          </span>
-
-          {/* Barra de progreso */}
-          {isUploading && (
-            <div className="w-full bg-gray-200 rounded mt-2 h-2 overflow-hidden">
-              <div className="h-2 bg-pink-500" style={{ width: `${uploadProgress}%` }} />
-            </div>
-          )}
-
-          {/* Nombre de archivo */}
-          {paymentFile && !isUploading && (
-            <p className="mt-2 text-sm text-gray-700">
-              Archivo seleccionado: <strong>{paymentFile.name}</strong>
-            </p>
-          )}
-        </label>
-
-        {fileError && <p className="text-red-500 text-sm">{fileError}</p>}
-
-        <div className="flex justify-center space-x-4 mt-4">
-          <button
-            onClick={() => hideModal()}
-            className="px-6 py-2 bg-gray-200 rounded"
-          >
-            Regresar
-          </button>
-          <button
-            onClick={() => {
-              if (!paymentFile) {
-                setFileError('Debes subir el comprobante de pago')
-                // re-render modal
-                showModal(renderPaymentModal())
-                return
-              }
-              hideModal()
-              showModal({
-                type: 'success' as const,
-                title: '¡Pago Exitoso!',
-                content: (
-                  <div className="space-y-4 text-center">
-                    <FiCheckCircle className="mx-auto text-4xl text-green-500" />
-                    <p className="text-lg font-medium">
-                      ¡Tu pago se ha procesado correctamente!
-                    </p>
-                    <p className="text-sm text-gray-600">Te contactaremos pronto.</p>
-                    <button
-                      onClick={() => {
-                        hideModal()
-                        // Vaciar carrito + notificar navbar
-                        localStorage.removeItem('cart')
-                        window.dispatchEvent(new Event('cartUpdated'))
-                        clearErrors()
-                        navigate('/')
-                      }}
-                      className="mt-4 px-6 py-2 bg-pink-500 text-white rounded hover:bg-pink-600"
-                    >
-                      Cerrar
-                    </button>
-                  </div>
-                )
-              })
-            }}
-            disabled={!paymentFile}
-            className={`px-6 py-2 rounded ${
-              paymentFile
-                ? 'bg-pink-500 text-white hover:bg-pink-600'
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            }`}
-          >
-            Confirmar pago
-          </button>
-        </div>
-      </div>
-    )
-  }), [
-    totalAmount,
-    handleFileUpload,
-    isUploading,
-    uploadProgress,
-    paymentFile,
-    fileError,
-    hideModal,
-    clearErrors,
-    navigate
-  ])
-
-  // Subida con FileReader y re-showModal para actualizar progreso
-  function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
+  // Función para manejar la subida de archivos
+  const handleFileUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
+
+    // Validar tipo de archivo
+    if (!file.type.startsWith('image/')) {
+      setFileError('Solo se permiten archivos de imagen')
+      return
+    }
+
+    // Validar tamaño (5MB máximo)
+    if (file.size > 5 * 1024 * 1024) {
+      setFileError('El archivo debe ser menor a 5MB')
+      return
+    }
 
     setIsUploading(true)
     setFileError('')
     setUploadProgress(0)
-    // primer showModal para iniciar barra
-    showModal(renderPaymentModal())
 
+    // Simular progreso de carga
     const reader = new FileReader()
-    reader.onprogress = event => {
+    
+    reader.onloadstart = () => {
+      setUploadProgress(0)
+    }
+    
+    reader.onprogress = (event) => {
       if (event.lengthComputable) {
         const percent = Math.round((event.loaded / event.total) * 100)
         setUploadProgress(percent)
-        showModal(renderPaymentModal())
       }
     }
-    reader.onloadend = () => {
+    
+    reader.onload = () => {
+      setUploadProgress(100)
       setPaymentFile(file)
       setIsUploading(false)
-      setUploadProgress(100)
-      showModal(renderPaymentModal())
     }
-    reader.readAsDataURL(file)
-  }
+    
+    reader.onerror = () => {
+      setFileError('Error al cargar el archivo')
+      setIsUploading(false)
+      setUploadProgress(0)
+    }
 
-  // Validación paso a paso (opción 2)
+    reader.readAsDataURL(file)
+  }, [])
+
+  // Función para mostrar modal de éxito
+  const showSuccessModal = useCallback(() => {
+    showModal({
+      type: 'success' as const,
+      title: '¡Pago Exitoso!',
+      content: (
+        <div className="space-y-4 text-center">
+          <FiCheckCircle className="mx-auto text-4xl text-green-500" />
+          <p className="text-lg font-medium">
+            ¡Tu pago se ha procesado correctamente!
+          </p>
+          <p className="text-sm text-gray-600">
+            Te contactaremos pronto para coordinar la entrega.
+          </p>
+          <button
+            onClick={() => {
+              hideModal()
+              // Limpiar datos
+              localStorage.removeItem('cart')
+              localStorage.removeItem('checkoutData')
+              window.dispatchEvent(new Event('cartUpdated'))
+              clearErrors()
+              navigate('/')
+            }}
+            className="mt-4 px-6 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 transition-colors"
+          >
+            Cerrar
+          </button>
+        </div>
+      )
+    })
+  }, [hideModal, clearErrors, navigate])
+
+  // Función para mostrar modal de pago
+  const showPaymentModal = useCallback(() => {
+    showModal({
+      type: 'info' as const,
+      title: 'Pago por Sinpe Móvil',
+      content: (
+        <div className="space-y-4 text-center">
+          <img 
+            src="/images/sinpe.png" 
+            alt="Sinpe Móvil" 
+            className="mx-auto h-16"
+            onError={(e) => {
+              e.currentTarget.style.display = 'none'
+            }}
+          />
+          <p>Depositar el 50% del monto total a:</p>
+          <div className="bg-gray-100 p-4 rounded-lg">
+            <p className="font-semibold text-lg">Número: 8888-8888</p>
+            <p className="font-semibold text-lg text-pink-600">
+              Monto: ₡{Math.floor(totalAmount / 2).toLocaleString()}
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            <label className="block">
+              <div className={`border-2 border-dashed rounded-lg p-6 cursor-pointer transition-all ${
+                isUploading ? 'border-pink-300 bg-pink-50' : 'border-gray-300 hover:border-pink-400'
+              }`}>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleFileUpload}
+                  disabled={isUploading}
+                />
+                
+                <div className="flex flex-col items-center space-y-2">
+                  {isUploading ? (
+                    <FiLoader className="text-2xl text-pink-500 animate-spin" />
+                  ) : (
+                    <FiUpload className="text-2xl text-gray-400" />
+                  )}
+                  
+                  <span className="text-sm text-gray-600">
+                    {isUploading ? 'Cargando archivo...' : 'Haz clic para subir comprobante'}
+                  </span>
+                </div>
+
+                {/* Barra de progreso */}
+                {isUploading && (
+                  <div className="w-full bg-gray-200 rounded-full mt-3 h-2 overflow-hidden">
+                    <div 
+                      className="h-2 bg-pink-500 transition-all duration-300 ease-out" 
+                      style={{ width: `${uploadProgress}%` }} 
+                    />
+                  </div>
+                )}
+
+                {/* Archivo seleccionado */}
+                {paymentFile && !isUploading && (
+                  <div className="mt-3 p-2 bg-green-50 rounded border border-green-200">
+                    <p className="text-sm text-green-700">
+                      <FiCheckCircle className="inline mr-1" />
+                      {paymentFile.name}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </label>
+
+            {fileError && (
+              <p className="text-red-500 text-sm bg-red-50 p-2 rounded">
+                {fileError}
+              </p>
+            )}
+          </div>
+
+          <div className="flex justify-center space-x-4 mt-6">
+            <button
+  onClick={() => hideModal()}
+  className="px-6 py-2 bg-gray-200 rounded hover:bg-gray-300 transition-colors"
+>
+  Cancelar
+</button>
+
+            <button
+              onClick={() => {
+                if (!paymentFile) {
+                  setFileError('Debes subir el comprobante de pago')
+                  return
+                }
+                hideModal()
+                showSuccessModal()
+              }}
+              disabled={!paymentFile || isUploading}
+              className={`px-6 py-2 rounded transition-colors ${
+                paymentFile && !isUploading
+                  ? 'bg-pink-500 text-white hover:bg-pink-600'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              }`}
+            >
+              {isUploading ? 'Procesando...' : 'Confirmar pago'}
+            </button>
+          </div>
+        </div>
+      )
+    })
+  }, [totalAmount, paymentFile, isUploading, uploadProgress, fileError, handleFileUpload, hideModal, showSuccessModal])
+
+  // Validación paso a paso
   const canProceed = () => {
     if (step === 1) {
       let valid = true
@@ -341,7 +399,7 @@ export function useCheckoutForm(
   const nextStep = () => { if (canProceed()) setStep(s => s+1) }
   const prevStep = () => setStep(s => s-1)
   const proceedToPayment = () => { if (step===2 && canProceed()) setStep(3) }
-  const openPaymentModal = () => { if (step===3) showModal(renderPaymentModal()) }
+  const openPaymentModal = () => { if (step===3) showPaymentModal() }
 
   const ErrorMessage: React.FC<{ fieldName: string }> = ({ fieldName }) => {
     const err = getFieldError(fieldName)
@@ -353,6 +411,8 @@ export function useCheckoutForm(
     formData,
     paymentFile,
     fileError,
+    isUploading,
+    uploadProgress,
     getInputClasses,
     getSelectClasses,
     handleInputChange,
