@@ -87,6 +87,7 @@ const Categories = forwardRef<CategoriesHandle>((_props, ref) => {
     })
     setWishlist(next)
     localStorage.setItem(wishlistKey, JSON.stringify(next))
+    window.dispatchEvent(new Event('wishUpdated'))
     setModalVersion(v => v + 1)
   }
 
@@ -102,6 +103,7 @@ const Categories = forwardRef<CategoriesHandle>((_props, ref) => {
     })
     setCart(next)
     localStorage.setItem(cartKey, JSON.stringify(next))
+    window.dispatchEvent(new Event('cartUpdated'))
     setModalVersion(v => v + 1)
   }
 

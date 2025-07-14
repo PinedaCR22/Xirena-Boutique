@@ -35,6 +35,7 @@ export default function Buy(): ReactElement {
   // helper para guardar y ajustar página si es necesario
   const saveCart = (updated: CartItem[]) => {
     localStorage.setItem('cart', JSON.stringify(updated))
+    window.dispatchEvent(new Event('cartUpdated'))
     setCart(updated)
     // ajusta página si la página actual ya no tiene items
     if ((page - 1) * perPage >= updated.length && page > 1) {
