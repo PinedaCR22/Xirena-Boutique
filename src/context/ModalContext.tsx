@@ -2,10 +2,10 @@
 import { createContext, useContext, useState } from 'react'
 import type { ReactNode, FC } from 'react'
 import { useTheme } from './ThemeContext'
-import { FiShoppingCart } from 'react-icons/fi'
+import { FiShoppingCart, FiCheckCircle } from 'react-icons/fi'
 import { FaHeartBroken, FaHeart } from 'react-icons/fa'
 
-export type ModalType = 'added' | 'removed' | 'info' | 'error'
+export type ModalType = 'added' | 'removed' | 'info' | 'error' | 'success'
 
 export interface ModalConfig {
   type: ModalType
@@ -61,7 +61,6 @@ export const ModalProvider: FC<{ children: ReactNode }> = ({ children }) => {
             className={`rounded-lg p-6 text-center transition-colors my-8 w-11/12 max-w-4xl
               ${isLightMode ? 'bg-white text-gray-900' : 'bg-[#f7e6e2] text-black'}`}
           >
-            {/* Mostramos sólo el contenido, el título se define dentro de content */}
             <div className="mb-4">{infoModal.content}</div>
             {infoModal.action && (
               <button
@@ -90,13 +89,16 @@ export const ModalProvider: FC<{ children: ReactNode }> = ({ children }) => {
                 <FaHeart className="mx-auto text-pink-500" size={32} />
               ) : toastModal.type === 'added' ? (
                 <FiShoppingCart className="mx-auto text-pink-500" size={32} />
-              ) : null}
-              {toastModal.type === 'removed' && (
+              ) : toastModal.type === 'removed' ? (
                 <FaHeartBroken className="mx-auto text-red-500" size={32} />
-              )}
+              ) : toastModal.type === 'success' ? (
+                <FiCheckCircle className="mx-auto text-green-500" size={32} />
+              ) : null}
             </div>
             <h2 className="text-2xl font-semibold mb-4">{toastModal.title}</h2>
-            <p className="mb-4">{toastModal.message}</p>
+            {toastModal.message && (
+              <p className="mb-4">{toastModal.message}</p>
+            )}
             <button
               onClick={() => setToastModal(null)}
               className={`mt-2 px-4 py-2 rounded transition

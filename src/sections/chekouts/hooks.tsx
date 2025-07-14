@@ -1,19 +1,52 @@
 // src/sections/chekouts/hooks.tsx
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useModal } from '../../context/ModalContext'
 import { useFormValidation, type FieldConfig } from '../../hooks/useFormValidation'
 import type { FeatureProduct } from '../../data/datafeatures'
 import { validationConfig } from '../../data/checkoutConfig'
+import { FiCheckCircle } from 'react-icons/fi'
 
+// ----------------------------------------
+// Tipos
+// ----------------------------------------
 export interface ExtendedProduct extends FeatureProduct {
   cartIndex: number
 }
 
-/**
- * Hook para cargar y expandir el carrito desde localStorage
- */
-export function useCart() {
+export interface UseCartResult {
+  expandedCart: ExtendedProduct[]
+  totalAmount: number
+  halfAmount: number
+}
+
+export interface UseCheckoutFormResult {
+  step: number
+  formData: Record<string, any>
+  paymentFile: File | null
+  fileError: string
+  getInputClasses: (field: string) => string
+  getSelectClasses: (field: string) => string
+  handleInputChange: (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+    name: string
+  ) => void
+  handleInputBlur: (field: string, value: string) => void
+  handleFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => void
+  ErrorMessage: React.FC<{ fieldName: string }>
+  nextStep: () => void
+  prevStep: () => void
+  proceedToPayment: () => void
+  openPaymentModal: () => void
+  clearErrors: () => void
+}
+
+// ----------------------------------------
+// useCart
+// ----------------------------------------
+export function useCart(): UseCartResult {
   const [expandedCart, setExpandedCart] = useState<ExtendedProduct[]>([])
 
   useEffect(() => {
@@ -40,13 +73,13 @@ export function useCart() {
   return { expandedCart, totalAmount, halfAmount }
 }
 
-/**
- * Hook para manejar flujo de checkout: validación, pasos y modal
- */
+// ----------------------------------------
+// useCheckoutForm
+// ----------------------------------------
 export function useCheckoutForm(
   totalAmount: number,
   cart: ExtendedProduct[]
-) {
+): UseCheckoutFormResult {
   const navigate = useNavigate()
   const { showModal, hideModal } = useModal()
 
@@ -54,18 +87,22 @@ export function useCheckoutForm(
   const [formData, setFormData] = useState<Record<string, any>>({})
   const [paymentFile, setPaymentFile] = useState<File | null>(null)
   const [fileError, setFileError] = useState<string>('')
+  const [uploadProgress, setUploadProgress] = useState<number>(0)
+  const [isUploading, setIsUploading] = useState<boolean>(false)
 
-  // Inicializar campos dinámicos de talla/color
+  // Inicializar tallas/colores
   useEffect(() => {
-    const initial: Record<string, any> = {}
-    cart.forEach(item => {
-      const sizeKey = `size-${item.cartIndex}`
-      const colorKey = `color-${item.cartIndex}`
-      if (!formData[sizeKey]) initial[sizeKey] = 'XS'
-      if (!formData[colorKey]) initial[colorKey] = 'Blanco'
+    setFormData(prev => {
+      const initial: Record<string, any> = {}
+      cart.forEach(item => {
+        const sizeKey = `size-${item.cartIndex}`
+        const colorKey = `color-${item.cartIndex}`
+        if (!(sizeKey in prev)) initial[sizeKey] = 'XS'
+        if (!(colorKey in prev)) initial[colorKey] = 'Blanco'
+      })
+      return Object.keys(initial).length ? { ...prev, ...initial } : prev
     })
-    if (Object.keys(initial).length) setFormData(prev => ({ ...prev, ...initial }))
-  }, [cart.length])
+  }, [cart])
 
   // Cargar progreso guardado
   useEffect(() => {
@@ -81,20 +118,19 @@ export function useCheckoutForm(
     }
   }, [])
 
-  // Persistir formulario y paso
+  // Persistir cambios
   useEffect(() => {
     if (Object.keys(formData).length) {
       localStorage.setItem('checkoutData', JSON.stringify({ formData, step }))
     }
   }, [formData, step])
 
-  // Configuración de validación en step 1 y 2
+  // Configuración de validación (paso 1 y 2)
   const dynamicConfig: FieldConfig = {}
   cart.forEach(item => {
     dynamicConfig[`medidas-${item.cartIndex}`] = { required: true }
   })
   const mergedConfig = { ...validationConfig, ...dynamicConfig }
-
   const {
     validateSingleField,
     validateAllFields,
@@ -104,23 +140,23 @@ export function useCheckoutForm(
     clearErrors
   } = useFormValidation(mergedConfig)
 
-  const getInputClasses = (field: string) => {
+  const getInputClasses = (f: string) => {
     const base = `transition-colors rounded-lg p-4 w-full`
-    return hasFieldError(field)
+    return hasFieldError(f)
       ? `${base} border-red-500 bg-red-50`
       : `${base} border border-gray-300 bg-white text-gray-800`
   }
-
-  const getSelectClasses = (field: string) => {
+  const getSelectClasses = (f: string) => {
     const base = `transition-colors rounded-lg p-2 w-full`
-    return hasFieldError(field)
+    return hasFieldError(f)
       ? `${base} border-red-500 bg-red-50`
       : `${base} border border-gray-300 bg-white text-gray-800`
   }
 
-  // Manejadores de cambio
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
     name: string
   ) => {
     const value = e.target.value
@@ -137,17 +173,144 @@ export function useCheckoutForm(
     if (mergedConfig[field]) validateSingleField(field, value)
   }
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Helper para renderizar siempre la versión actual del modal
+  const renderPaymentModal = useCallback(() => ({
+    type: 'info' as const,
+    title: 'Pago por Sinpe Móvil',
+    content: (
+      <div className="space-y-4 text-center">
+        <img src="/images/sinpe.png" alt="Sinpe Móvil" className="mx-auto h-16" />
+        <p>Depositar el 50% del monto total a:</p>
+        <p className="font-semibold">Número: 8888-8888</p>
+        <p className="font-semibold">
+          Monto a depositar: ₡{Math.floor(totalAmount / 2).toLocaleString()}
+        </p>
+
+        <label className="block border-2 border-dashed rounded p-6 cursor-pointer">
+          <input
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleFileUpload}
+          />
+          <span className="text-sm text-gray-500">
+            Haz clic para subir comprobante de pago
+          </span>
+
+          {/* Barra de progreso */}
+          {isUploading && (
+            <div className="w-full bg-gray-200 rounded mt-2 h-2 overflow-hidden">
+              <div className="h-2 bg-pink-500" style={{ width: `${uploadProgress}%` }} />
+            </div>
+          )}
+
+          {/* Nombre de archivo */}
+          {paymentFile && !isUploading && (
+            <p className="mt-2 text-sm text-gray-700">
+              Archivo seleccionado: <strong>{paymentFile.name}</strong>
+            </p>
+          )}
+        </label>
+
+        {fileError && <p className="text-red-500 text-sm">{fileError}</p>}
+
+        <div className="flex justify-center space-x-4 mt-4">
+          <button
+            onClick={() => hideModal()}
+            className="px-6 py-2 bg-gray-200 rounded"
+          >
+            Regresar
+          </button>
+          <button
+            onClick={() => {
+              if (!paymentFile) {
+                setFileError('Debes subir el comprobante de pago')
+                // re-render modal
+                showModal(renderPaymentModal())
+                return
+              }
+              hideModal()
+              showModal({
+                type: 'success' as const,
+                title: '¡Pago Exitoso!',
+                content: (
+                  <div className="space-y-4 text-center">
+                    <FiCheckCircle className="mx-auto text-4xl text-green-500" />
+                    <p className="text-lg font-medium">
+                      ¡Tu pago se ha procesado correctamente!
+                    </p>
+                    <p className="text-sm text-gray-600">Te contactaremos pronto.</p>
+                    <button
+                      onClick={() => {
+                        hideModal()
+                        // Vaciar carrito + notificar navbar
+                        localStorage.removeItem('cart')
+                        window.dispatchEvent(new Event('cartUpdated'))
+                        clearErrors()
+                        navigate('/')
+                      }}
+                      className="mt-4 px-6 py-2 bg-pink-500 text-white rounded hover:bg-pink-600"
+                    >
+                      Cerrar
+                    </button>
+                  </div>
+                )
+              })
+            }}
+            disabled={!paymentFile}
+            className={`px-6 py-2 rounded ${
+              paymentFile
+                ? 'bg-pink-500 text-white hover:bg-pink-600'
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            }`}
+          >
+            Confirmar pago
+          </button>
+        </div>
+      </div>
+    )
+  }), [
+    totalAmount,
+    handleFileUpload,
+    isUploading,
+    uploadProgress,
+    paymentFile,
+    fileError,
+    hideModal,
+    clearErrors,
+    navigate
+  ])
+
+  // Subida con FileReader y re-showModal para actualizar progreso
+  function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
-    if (file) {
-      setPaymentFile(file)
-      setFileError('')
+    if (!file) return
+
+    setIsUploading(true)
+    setFileError('')
+    setUploadProgress(0)
+    // primer showModal para iniciar barra
+    showModal(renderPaymentModal())
+
+    const reader = new FileReader()
+    reader.onprogress = event => {
+      if (event.lengthComputable) {
+        const percent = Math.round((event.loaded / event.total) * 100)
+        setUploadProgress(percent)
+        showModal(renderPaymentModal())
+      }
     }
+    reader.onloadend = () => {
+      setPaymentFile(file)
+      setIsUploading(false)
+      setUploadProgress(100)
+      showModal(renderPaymentModal())
+    }
+    reader.readAsDataURL(file)
   }
 
-  // Validación de cada paso
+  // Validación paso a paso (opción 2)
   const canProceed = () => {
-    console.log('Validando paso:', step)
     if (step === 1) {
       let valid = true
       cart.forEach(item => {
@@ -159,107 +322,26 @@ export function useCheckoutForm(
           valid = false
         }
       })
-      console.log('Paso 1 válido:', valid)
       return valid
     }
-
     if (step === 2) {
-      const required = ['nombre','correo','telefono','provincia','canton','entrega']
-      const data = Object.fromEntries(required.map(f => [f, formData[f] || '']))
-      const ok = validateAllFields(data)
+      const ok = validateAllFields(formData)
       if (!ok) {
+        const required = ['nombre','correo','telefono','provincia','canton','entrega']
         required.forEach(f => {
-          console.log(f, getFieldError(f))
           setFieldTouched(f)
-          validateSingleField(f, data[f])
+          validateSingleField(f, formData[f] || '')
         })
       }
-      console.log('Paso 2 válido:', ok)
       return ok
     }
-
     return true
   }
 
-  const nextStep = () => {
-    if (canProceed()) setStep(s => s + 1)
-  }
-
-  const prevStep = () => setStep(s => s - 1)
-
-  /**
-   * Lanza el paso 3 y muestra modal de pago
-   */
-  const finalizeOrder = () => {
-    console.log('Iniciando finalización, paso:', step)
-    if (step !== 2) return
-    if (!canProceed()) return
-
-    // Avanzar al paso 3 antes de abrir modal
-    setStep(3)
-    setFileError('')
-
-    showModal({
-      type: 'info',
-      title: 'Pago por Sinpe Móvil',
-      content: (
-        <div className="space-y-4 text-center">
-          <img src="/images/sinpe.png" alt="Sinpe Móvil" className="mx-auto h-16" />
-          <p>Depositar el 50% del monto total a:</p>
-          <p className="font-semibold">Número: 8888-8888</p>
-          <p className="font-semibold">
-            Monto a depositar: ₡{Math.floor(totalAmount/2).toLocaleString()}
-          </p>
-          <label className="block border-2 border-dashed rounded p-6 cursor-pointer">
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handleFileUpload}
-            />
-            <span className="text-sm text-gray-500">
-              Haz clic para subir comprobante de pago
-            </span>
-          </label>
-          {fileError && <span className="text-red-500">{fileError}</span>}
-          <div className="flex justify-center space-x-4 mt-4">
-            <button onClick={() => hideModal()} className="px-6 py-2 bg-gray-200 rounded">
-              Regresar
-            </button>
-            <button
-              onClick={() => {
-                if (!paymentFile) return setFileError('Debes subir el comprobante de pago')
-                hideModal()
-                showModal({
-                  type: 'info',
-                  title: 'Pedido en proceso',
-                  content: (
-                    <div className="space-y-4 text-center">
-                      <p className="text-lg font-medium">Tu pedido está en proceso</p>
-                      <p className="text-sm text-gray-600">
-                        Recibirás confirmación por correo
-                      </p>
-                      <button
-                        onClick={() => {
-                          hideModal()
-                          localStorage.removeItem('cart')
-                          localStorage.removeItem('checkoutData')
-                          clearErrors()
-                          navigate('/')
-                        }}
-                        className="mt-4 px-6 py-2 bg-pink-500 text-white rounded"
-                      >Aceptar</button>
-                    </div>
-                  )
-                })
-              }}
-              className="px-6 py-2 bg-pink-500 text-white rounded"
-            >Confirmar pago</button>
-          </div>
-        </div>
-      )
-    })
-  }
+  const nextStep = () => { if (canProceed()) setStep(s => s+1) }
+  const prevStep = () => setStep(s => s-1)
+  const proceedToPayment = () => { if (step===2 && canProceed()) setStep(3) }
+  const openPaymentModal = () => { if (step===3) showModal(renderPaymentModal()) }
 
   const ErrorMessage: React.FC<{ fieldName: string }> = ({ fieldName }) => {
     const err = getFieldError(fieldName)
@@ -275,10 +357,12 @@ export function useCheckoutForm(
     getSelectClasses,
     handleInputChange,
     handleInputBlur,
-    handleFileUpload,
+    handleFileUpload, 
     ErrorMessage,
     nextStep,
     prevStep,
-    finalizeOrder
+    proceedToPayment,
+    openPaymentModal,
+    clearErrors
   }
 }
