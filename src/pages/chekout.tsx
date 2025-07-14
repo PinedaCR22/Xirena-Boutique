@@ -17,7 +17,7 @@ export default function CheckoutPage() {
     ErrorMessage,
     nextStep,
     prevStep,
-    finalizeOrder    // ← asegúrate de que esté aquí
+    finalizeOrder
   } = useCheckoutForm(totalAmount, expandedCart)
 
   return (
@@ -48,7 +48,7 @@ export default function CheckoutPage() {
             halfAmount={halfAmount}
             prevStep={prevStep}
             nextStep={nextStep}
-            finalizeOrder={finalizeOrder}   
+            finalizeOrder={finalizeOrder}
           />
         </div>
       </div>
