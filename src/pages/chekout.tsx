@@ -13,11 +13,11 @@ export default function CheckoutPage() {
     getSelectClasses,
     handleInputChange,
     handleInputBlur,
-    handleFileUpload,
     ErrorMessage,
     nextStep,
     prevStep,
-    finalizeOrder
+    proceedToPayment,
+    openPaymentModal
   } = useCheckoutForm(totalAmount, expandedCart)
 
   return (
@@ -37,7 +37,6 @@ export default function CheckoutPage() {
             getSelectClasses={getSelectClasses}
             handleInputChange={handleInputChange}
             handleInputBlur={handleInputBlur}
-            handleFileUpload={handleFileUpload}
             ErrorMessage={ErrorMessage}
           />
         </div>
@@ -48,7 +47,8 @@ export default function CheckoutPage() {
             halfAmount={halfAmount}
             prevStep={prevStep}
             nextStep={nextStep}
-            finalizeOrder={finalizeOrder}
+            proceedToPayment={proceedToPayment}
+            openPaymentModal={openPaymentModal}
           />
         </div>
       </div>
