@@ -33,11 +33,13 @@ export default function Wishes() {
   const saveWishlist = (items: FeatureProduct[]) => {
     setWishlist(items)
     localStorage.setItem('wishlist', JSON.stringify(items))
+    window.dispatchEvent(new Event('wishUpdated'))
   }
 
   const saveCart = (items: FeatureProduct[]) => {
     setCart(items)
     localStorage.setItem('cart', JSON.stringify(items))
+    window.dispatchEvent(new Event('cartUpdated'))
   }
 
   const remove = (id: number) => {

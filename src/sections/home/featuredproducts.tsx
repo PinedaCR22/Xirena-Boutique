@@ -57,6 +57,7 @@ export default function FeaturedProducts({ isLightMode }: FeaturedProductsProps)
     })
     setWishlist(next)
     localStorage.setItem('wishlist', JSON.stringify(next))
+    window.dispatchEvent(new Event('wishUpdated'))
   }
 
   const toggleCart = (prod: FeatureProduct) => {
@@ -71,6 +72,7 @@ export default function FeaturedProducts({ isLightMode }: FeaturedProductsProps)
     })
     setCart(next)
     localStorage.setItem('cart', JSON.stringify(next))
+    window.dispatchEvent(new Event('cartUpdated'))
   }
 
   const openInfo = (prod: FeatureProduct) => {
