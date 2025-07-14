@@ -1,6 +1,5 @@
-// src/pages/chekout.tsx
+// src/pages/checkout.tsx
 import { FiCreditCard } from 'react-icons/fi'
-// 👉 Importa tus hooks desde sections/chekouts
 import { useCart, useCheckoutForm } from '../sections/chekouts/hooks'
 import Steps from '../sections/chekouts/steps'
 import OrderSummary from '../sections/chekouts/ordersummary'
@@ -18,7 +17,8 @@ export default function CheckoutPage() {
     ErrorMessage,
     nextStep,
     prevStep,
-  } = useCheckoutForm(totalAmount)
+    finalizeOrder    // ← asegúrate de que esté aquí
+  } = useCheckoutForm(totalAmount, expandedCart)
 
   return (
     <section className="py-12 px-4 sm:px-8 lg:px-16 min-h-screen transition-colors">
@@ -48,6 +48,7 @@ export default function CheckoutPage() {
             halfAmount={halfAmount}
             prevStep={prevStep}
             nextStep={nextStep}
+            finalizeOrder={finalizeOrder}   
           />
         </div>
       </div>
