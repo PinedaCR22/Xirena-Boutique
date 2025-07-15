@@ -7,7 +7,7 @@ export interface CategoryProduct {
   image: string
   description: string
   // Aquí corregimos el literal de 'Crochet' a 'Crochets' para que coincida con los datos
-  category: 'Bikinis' | 'Tops' | 'Salidas de playa' | 'Bottoms' | 'Crochet' | 'Accesorios'
+  category: 'Bikinis' | 'Tops' | 'Vestidos' | 'Crochet' | 'Bottoms' | 'Salidas de playa' | 'Accesorios'
   quantity: number
 }
 
@@ -31,25 +31,14 @@ export const CATEGORY_PRODUCTS: CategoryProduct[] = [
   { id: 35, name: 'Vestido Vintage Floral', price: 37000, image: '/images/PRUEBA5.jpg', description: 'Vestido floral estilo retro con cinturón.',                 category: 'Tops',    quantity: 1 },
   { id: 36, name: 'Vestido de Gasa',        price: 41000, image: '/images/PRUEBA1.jpg', description: 'Vestido ligero de gasa con tirantes finos.',                category: 'Tops',    quantity: 1 },
 
-  // Salidas de playa
-  { id: 37, name: 'Conjunto de Lino Natural',    price: 45000, image: '/images/PRUEBA2.jpg', description: 'Blusa y pantalón corto de lino beige.',                category: 'Salidas de playa', quantity: 1 },
-  { id: 38, name: 'Conjunto Deportivo',          price: 46000, image: '/images/PRUEBA3.jpg', description: 'Conjunto deportivo para entrenamiento y descanso.',     category: 'Salidas de playa', quantity: 1 },
-  { id: 39, name: 'Conjunto Floral',             price: 48000, image: '/images/PRUEBA4.jpg', description: 'Conjunto top y falda con estampado floral.',           category: 'Salidas de playa', quantity: 1 },
-  { id: 40, name: 'Conjunto Blanco Chic',        price: 47000, image: '/images/PRUEBA5.jpg', description: 'Top corto y pantalón blanco de vestir.',               category: 'Salidas de playa', quantity: 1 },
-  { id: 41, name: 'Conjunto Casual Rayas',       price: 44000, image: '/images/PRUEBA1.jpg', description: 'Conjunto casual con rayas horizontales.',             category: 'Salidas de playa', quantity: 1 },
-  { id: 42, name: 'Conjunto Elegante de Satén',  price: 49000, image: '/images/PRUEBA2.jpg', description: 'Top halter y pantalón de satén.',                     category: 'Salidas de playa', quantity: 1 },
-  { id: 43, name: 'Conjunto Denim',              price: 43000, image: '/images/PRUEBA3.jpg', description: 'Chaqueta corta y short de mezclilla.',                category: 'Salidas de playa', quantity: 1 },
-  { id: 44, name: 'Conjunto Boho',               price: 45500, image: '/images/PRUEBA4.jpg', description: 'Conjunto con estampado bohemio y tela fluida.',       category: 'Salidas de playa', quantity: 1 },
-
-  // Bottoms
-  { id: 45, name: 'Disfraz de Pirata',     price: 30000, image: '/images/PRUEBA5.jpg', description: 'Disfraz de pirata femenino con falda y sombrero.',      category: 'Bottoms',  quantity: 1 },
-  { id: 46, name: 'Disfraz de Gatita',     price: 32000, image: '/images/PRUEBA1.jpg', description: 'Disfraz sexy de gatita con orejas y cola.',             category: 'Bottoms',  quantity: 1 },
-  { id: 47, name: 'Disfraz de Conejita',   price: 31000, image: '/images/PRUEBA2.jpg', description: 'Conjunto con orejas, corbatín y corset negro.',         category: 'Bottoms',  quantity: 1 },
-  { id: 48, name: 'Disfraz de Ángel',      price: 33000, image: '/images/PRUEBA3.jpg', description: 'Disfraz blanco con alas y corona.',                    category: 'Bottoms',  quantity: 1 },
-  { id: 49, name: 'Disfraz de Enfermera',  price: 34000, image: '/images/PRUEBA4.jpg', description: 'Conjunto blanco con accesorios rojos.',                 category: 'Bottoms',  quantity: 1 },
-  { id: 50, name: 'Disfraz de Superhéroe', price: 35000, image: '/images/PRUEBA5.jpg', description: 'Disfraz ceñido con capa y antifaz.',                   category: 'Bottoms',  quantity: 1 },
-  { id: 51, name: 'Disfraz de Caperucita', price: 36000, image: '/images/PRUEBA1.jpg', description: 'Vestido rojo con capa y encaje.',                       category: 'Bottoms',  quantity: 1 },
-  { id: 52, name: 'Disfraz de Marinera',   price: 32000, image: '/images/PRUEBA2.jpg', description: 'Vestido azul con gorro y anclas.',                     category: 'Bottoms',  quantity: 1 },
+// Vestidos
+ { id: 77, name: 'Vestido mamona',    price: 35000, image: '/images/PRUEBA5.jpg', description: 'Vestido corto negro elegante con escote cruzado.',           category: 'Vestidos',    quantity: 1 },
+  { id: 78, name: 'Vestido de putilla',      price: 40000, image: '/images/PRUEBA1.jpg', description: 'Vestido ajustado con encaje delicado.',                     category: 'Vestidos',    quantity: 1 },
+  { id: 79, name: 'Vestido Junquillalera',  price: 36000, image: '/images/PRUEBA2.jpg', description: 'Vestido fluido con flores y escote corazón.',                category: 'Vestidos',    quantity: 1 },
+  { id: 80, name: 'Vestido La Paraiso',        price: 39000, image: '/images/PRUEBA3.jpg', description: 'Vestido tipo lencero satinado ideal para noche.',            category: 'Vestidos',    quantity: 1 },
+  { id: 81, name: 'Vestido Rio Seco',     price: 42000, image: '/images/PRUEBA4.jpg', description: 'Vestido largo de rayas verticales.',                         category: 'Vestidos',    quantity: 1 },
+  { id: 82, name: 'Vestido Lacastro', price: 37000, image: '/images/PRUEBA5.jpg', description: 'Vestido floral estilo retro con cinturón.',                 category: 'Vestidos',    quantity: 1 },
+  { id: 83, name: 'Vestido Ximena',        price: 41000, image: '/images/PRUEBA1.jpg', description: 'Vestido ligero de gasa con tirantes finos.',category: 'Vestidos',    quantity: 1 },
 
   // Crochets
   { id: 53, name: 'Afrodita Top',         price: 22800, image: '/images/categories/crochets/AFRODITA TOP (22,800).JPG', description: 'Top de crochet con textura calada y tirantes finos.', category: 'Crochet', quantity: 1 },
@@ -68,6 +57,26 @@ export const CATEGORY_PRODUCTS: CategoryProduct[] = [
   { id: 66, name: 'Thalía Top',            price: 17300, image: '/images/categories/crochets/THALÍA TOP (17,300).JPG', description: 'Top de crochet con volantes delicados y escote corazón.', category: 'Crochet', quantity: 1 },
   { id: 67, name: 'Venus Top',             price: 16700, image: '/images/categories/crochets/VENUS TOP (16,700).JPG', description: 'Top de crochet con hombros descubiertos.',             category: 'Crochet', quantity: 1 },
   { id: 68, name: 'Zafiro Bikini',         price: 23800, image: '/images/categories/crochets/ZAFIRO BIKINI (23,800).JPG', description: 'Bikini de crochet con detalles brillantes.',          category: 'Crochet', quantity: 1 },
+
+   // Bottoms
+  { id: 45, name: 'Disfraz de Pirata',     price: 30000, image: '/images/PRUEBA5.jpg', description: 'Disfraz de pirata femenino con falda y sombrero.',      category: 'Bottoms',  quantity: 1 },
+  { id: 46, name: 'Disfraz de Gatita',     price: 32000, image: '/images/PRUEBA1.jpg', description: 'Disfraz sexy de gatita con orejas y cola.',             category: 'Bottoms',  quantity: 1 },
+  { id: 47, name: 'Disfraz de Conejita',   price: 31000, image: '/images/PRUEBA2.jpg', description: 'Conjunto con orejas, corbatín y corset negro.',         category: 'Bottoms',  quantity: 1 },
+  { id: 48, name: 'Disfraz de Ángel',      price: 33000, image: '/images/PRUEBA3.jpg', description: 'Disfraz blanco con alas y corona.',                    category: 'Bottoms',  quantity: 1 },
+  { id: 49, name: 'Disfraz de Enfermera',  price: 34000, image: '/images/PRUEBA4.jpg', description: 'Conjunto blanco con accesorios rojos.',                 category: 'Bottoms',  quantity: 1 },
+  { id: 50, name: 'Disfraz de Superhéroe', price: 35000, image: '/images/PRUEBA5.jpg', description: 'Disfraz ceñido con capa y antifaz.',                   category: 'Bottoms',  quantity: 1 },
+  { id: 51, name: 'Disfraz de Caperucita', price: 36000, image: '/images/PRUEBA1.jpg', description: 'Vestido rojo con capa y encaje.',                       category: 'Bottoms',  quantity: 1 },
+  { id: 52, name: 'Disfraz de Marinera',   price: 32000, image: '/images/PRUEBA2.jpg', description: 'Vestido azul con gorro y anclas.',                     category: 'Bottoms',  quantity: 1 },
+
+  // Salidas de playa
+  { id: 37, name: 'Conjunto de Lino Natural',    price: 45000, image: '/images/PRUEBA2.jpg', description: 'Blusa y pantalón corto de lino beige.',                category: 'Salidas de playa', quantity: 1 },
+  { id: 38, name: 'Conjunto Deportivo',          price: 46000, image: '/images/PRUEBA3.jpg', description: 'Conjunto deportivo para entrenamiento y descanso.',     category: 'Salidas de playa', quantity: 1 },
+  { id: 39, name: 'Conjunto Floral',             price: 48000, image: '/images/PRUEBA4.jpg', description: 'Conjunto top y falda con estampado floral.',           category: 'Salidas de playa', quantity: 1 },
+  { id: 40, name: 'Conjunto Blanco Chic',        price: 47000, image: '/images/PRUEBA5.jpg', description: 'Top corto y pantalón blanco de vestir.',               category: 'Salidas de playa', quantity: 1 },
+  { id: 41, name: 'Conjunto Casual Rayas',       price: 44000, image: '/images/PRUEBA1.jpg', description: 'Conjunto casual con rayas horizontales.',             category: 'Salidas de playa', quantity: 1 },
+  { id: 42, name: 'Conjunto Elegante de Satén',  price: 49000, image: '/images/PRUEBA2.jpg', description: 'Top halter y pantalón de satén.',                     category: 'Salidas de playa', quantity: 1 },
+  { id: 43, name: 'Conjunto Denim',              price: 43000, image: '/images/PRUEBA3.jpg', description: 'Chaqueta corta y short de mezclilla.',                category: 'Salidas de playa', quantity: 1 },
+  { id: 44, name: 'Conjunto Boho',               price: 45500, image: '/images/PRUEBA4.jpg', description: 'Conjunto con estampado bohemio y tela fluida.',       category: 'Salidas de playa', quantity: 1 },
 
   // Accesorios
   { id: 69, name: 'Top Corto con Encaje',  price: 20000, image: '/images/PRUEBA3.jpg', description: 'Top corto negro con detalles de encaje.',             category: 'Accesorios', quantity: 1 },
