@@ -10,9 +10,9 @@ export type ModalType = 'added' | 'removed' | 'info' | 'error' | 'success'
 export interface ModalConfig {
   type: ModalType
   title: string
-  message?: string
+  message?: string         // Texto adicional opcional
   content?: ReactNode
-  action?: () => void
+  action?: () => void      // Función al cerrar
 }
 
 interface ModalContextValue {
@@ -34,11 +34,8 @@ export const ModalProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [toastModal, setToastModal] = useState<ModalConfig | null>(null)
 
   const showModal = (config: ModalConfig) => {
-    if (config.type === 'info') {
-      setInfoModal(config)
-    } else {
-      setToastModal(config)
-    }
+    if (config.type === 'info') setInfoModal(config)
+    else setToastModal(config)
   }
 
   const hideModal = (target?: 'info' | 'toast') => {
@@ -58,17 +55,22 @@ export const ModalProvider: FC<{ children: ReactNode }> = ({ children }) => {
       {infoModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div
-            className={`rounded-lg p-6 text-center transition-colors my-8 w-11/12 max-w-4xl
-              ${isLightMode ? 'bg-white text-gray-900' : 'bg-[#f7e6e2] text-black'}`}
+            className={`relative rounded-lg p-6 w-11/12 max-w-4xl shadow-lg transition-colors ${
+              isLightMode ? 'bg-white text-gray-900' : 'bg-[#f7e6e2] text-black'
+            }`}
           >
             <div className="mb-4">{infoModal.content}</div>
             {infoModal.action && (
               <button
-                onClick={infoModal.action}
-                className={`mt-2 px-4 py-2 rounded transition
-                  ${isLightMode
+                onClick={() => {
+                  infoModal.action!()
+                  hideModal('info')
+                }}
+                className={`mt-2 px-4 py-2 rounded transition ${
+                  isLightMode
                     ? 'bg-pink-500 text-white hover:bg-pink-600'
-                    : 'bg-pink-400 text-white hover:bg-pink-500'}`}
+                    : 'bg-pink-400 text-white hover:bg-pink-500'
+                }`}
               >
                 Aceptar
               </button>
@@ -81,30 +83,35 @@ export const ModalProvider: FC<{ children: ReactNode }> = ({ children }) => {
       {toastModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div
-            className={`rounded-lg p-6 text-center transition-colors my-8 w-11/12 max-w-md
-              ${isLightMode ? 'bg-white text-gray-900' : 'bg-[#f7e6e2] text-black'}`}
+            className={`flex flex-col items-center rounded-lg p-6 w-11/12 max-w-md shadow-lg transition-colors ${
+              isLightMode ? 'bg-white text-gray-900' : 'bg-[#f7e6e2] text-black'
+            }`}
           >
             <div className="text-5xl mb-4">
               {toastModal.type === 'added' && toastModal.title === '¡Agregado!' ? (
-                <FaHeart className="mx-auto text-pink-500" size={32} />
+                <FaHeart className="text-pink-500" size={32} />
               ) : toastModal.type === 'added' ? (
-                <FiShoppingCart className="mx-auto text-pink-500" size={32} />
+                <FiShoppingCart className="text-pink-500" size={32} />
               ) : toastModal.type === 'removed' ? (
-                <FaHeartBroken className="mx-auto text-red-500" size={32} />
+                <FaHeartBroken className="text-red-500" size={32} />
               ) : toastModal.type === 'success' ? (
-                <FiCheckCircle className="mx-auto text-green-500" size={32} />
+                <FiCheckCircle className="text-green-500" size={32} />
               ) : null}
             </div>
-            <h2 className="text-2xl font-semibold mb-4">{toastModal.title}</h2>
+            <h2 className="text-2xl font-semibold mb-2">{toastModal.title}</h2>
             {toastModal.message && (
-              <p className="mb-4">{toastModal.message}</p>
+              <p className="mb-4 text-sm">{toastModal.message}</p>
             )}
             <button
-              onClick={() => setToastModal(null)}
-              className={`mt-2 px-4 py-2 rounded transition
-                ${isLightMode
+              onClick={() => {
+                toastModal.action?.()
+                hideModal('toast')
+              }}
+              className={`px-4 py-2 rounded transition ${
+                isLightMode
                   ? 'bg-pink-500 text-white hover:bg-pink-600'
-                  : 'bg-pink-400 text-white hover:bg-pink-500'}`}
+                  : 'bg-pink-400 text-white hover:bg-pink-500'
+              }`}
             >
               Cerrar
             </button>

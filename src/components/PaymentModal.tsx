@@ -28,27 +28,24 @@ export default function PaymentModal({
 }: PaymentModalProps) {
   const { isLightMode } = useTheme()
 
-  // En modo claro: modal blanco con overlay
-  // En modo oscuro: modal coral sin overlay
-  const modalBg = isLightMode ? 'bg-white' : 'bg-[#F3D5D0]'
-  const overlayClass = isLightMode ? 'absolute inset-0 bg-black/50' : ''
-  const borderColor = 'border-black'
-  const iconTextColor = 'text-black'
+  // En modo claro: fondo blanco con overlay oscuro
+  // En modo oscuro (coral): fondo coral sin overlay
+  const modalBgClass = isLightMode ? 'bg-white' : 'bg-[#F3D5D0]'
+  const overlay = isLightMode ? <div className="absolute inset-0 bg-black/50" /> : null
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
-      {overlayClass && <div className={overlayClass} />}
-
+      {overlay}
       <div
-        className={`relative rounded-lg p-6 w-11/12 max-w-3xl shadow-lg transition-colors ${modalBg} ${borderColor}`}
+        className={`relative w-11/12 max-w-3xl rounded-lg p-6 shadow-lg transition-colors ${modalBgClass}`}
       >
         {/* Header */}
         <div className="mb-4 text-center">
           <img src="/images/sinpe.png" alt="Sinpe Móvil" className="mx-auto h-16" />
-          <p className="mt-2">Depositar el 50% del monto total a:</p>
+          <p className="mt-2 text-base">Depositar el 50% del monto total a:</p>
         </div>
 
-        {/* Instrucciones de pago */}
+        {/* Instrucciones */}
         <div className="bg-gray-100 p-4 rounded-lg mb-6">
           <p className="font-semibold text-lg">Número: 8888-8888</p>
           <p className="font-semibold text-lg text-pink-600">
@@ -56,9 +53,10 @@ export default function PaymentModal({
           </p>
         </div>
 
-        {/* Zona de subida de comprobante */}
+        {/* Dropzone */}
         <label className="block mb-4">
-          <div className={`border-2 border-dashed border-black hover:border-pink-400 rounded-lg p-6 cursor-pointer transition-all ${modalBg}`}
+          <div
+            className={`border-2 border-dashed border-black hover:border-pink-400 rounded-lg p-6 cursor-pointer transition-all ${modalBgClass}`}
           >
             <input
               type="file"
@@ -69,11 +67,11 @@ export default function PaymentModal({
             />
             <div className="flex flex-col items-center space-y-2">
               {isUploading ? (
-                <FiLoader className={`text-2xl animate-spin ${iconTextColor}`} />
+                <FiLoader className="text-2xl animate-spin text-black" />
               ) : (
-                <FiUpload className={`text-2xl ${iconTextColor}`} />
+                <FiUpload className="text-2xl text-black" />
               )}
-              <span className={`${iconTextColor} text-sm`}>
+              <span className="text-sm text-black">
                 {isUploading ? 'Cargando archivo...' : 'Haz clic para subir comprobante'}
               </span>
             </div>
@@ -88,7 +86,7 @@ export default function PaymentModal({
               </div>
             )}
 
-            {/* Archivo seleccionado */}
+            {/* Archivo cargado */}
             {paymentFile && !isUploading && (
               <div className="mt-3 flex items-center justify-between p-2 bg-green-50 rounded border border-green-200">
                 <p className="text-sm text-green-700 flex items-center">
@@ -118,7 +116,7 @@ export default function PaymentModal({
         <div className="flex justify-end space-x-4">
           <button
             onClick={onCancel}
-            className="px-6 py-2 bg-gray-200 rounded hover:bg-gray-300 text-black"
+            className="px-6 py-2 bg-gray-200 text-black rounded hover:bg-gray-300"
           >
             Cancelar
           </button>
