@@ -1,3 +1,4 @@
+// src/sections/chekouts/hooks.tsx
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useModal } from '../../context/ModalContext'
@@ -26,11 +27,13 @@ export interface UseCheckoutFormResult {
   openPayment: () => void
   closePayment: () => void
   confirmPayment: () => void
-  removeFile: () => void // Nuevo handler para eliminar archivo
+  removeFile: () => void
   getInputClasses: (field: string) => string
   getSelectClasses: (field: string) => string
   handleInputChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
     name: string
   ) => void
   handleInputBlur: (field: string, value: string) => void
@@ -69,7 +72,6 @@ export function useCart(): UseCartResult {
   return { expandedCart, totalAmount, halfAmount }
 }
 
-// Prefix totalAmount with underscore para evitar warning de variable no usada
 export function useCheckoutForm(
   _totalAmount: number,
   cart: ExtendedProduct[]
@@ -256,12 +258,13 @@ export function useCheckoutForm(
     showModal({
       type: 'success',
       title: '¡Pago Exitoso!',
+      message: 'Gracias por tu compra, te contactaremos pronto.',
       action: () => {
-        hideModal()
         localStorage.removeItem('cart')
         localStorage.removeItem('checkoutData')
         window.dispatchEvent(new Event('cartUpdated'))
         clearErrors()
+        hideModal('toast')
         navigate('/')
       }
     })
