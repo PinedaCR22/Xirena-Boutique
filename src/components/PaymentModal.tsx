@@ -1,4 +1,3 @@
-// src/components/PaymentModal.tsx
 import React from 'react'
 import { FiUpload, FiLoader, FiCheckCircle } from 'react-icons/fi'
 import { useTheme } from '../context/ThemeContext'
@@ -6,6 +5,7 @@ import { useTheme } from '../context/ThemeContext'
 interface PaymentModalProps {
   totalAmount: number
   isUploading: boolean
+  isSending: boolean
   uploadProgress: number
   paymentFile: File | null
   fileError: string
@@ -18,6 +18,7 @@ interface PaymentModalProps {
 export default function PaymentModal({
   totalAmount,
   isUploading,
+  isSending,
   uploadProgress,
   paymentFile,
   fileError,
@@ -28,17 +29,13 @@ export default function PaymentModal({
 }: PaymentModalProps) {
   const { isLightMode } = useTheme()
 
-  // En modo claro: fondo blanco con overlay oscuro
-  // En modo oscuro (coral): fondo coral sin overlay
   const modalBgClass = isLightMode ? 'bg-white' : 'bg-[#F3D5D0]'
   const overlay = isLightMode ? <div className="absolute inset-0 bg-black/50" /> : null
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
       {overlay}
-      <div
-        className={`relative w-11/12 max-w-3xl rounded-lg p-6 shadow-lg transition-colors ${modalBgClass}`}
-      >
+      <div className={`relative w-11/12 max-w-3xl rounded-lg p-6 shadow-lg transition-colors ${modalBgClass}`}>
         {/* Header */}
         <div className="mb-4 text-center">
           <img src="/images/sinpe.png" alt="Sinpe Móvil" className="mx-auto h-16" />
@@ -55,15 +52,13 @@ export default function PaymentModal({
 
         {/* Dropzone */}
         <label className="block mb-4">
-          <div
-            className={`border-2 border-dashed border-black hover:border-pink-400 rounded-lg p-6 cursor-pointer transition-all ${modalBgClass}`}
-          >
+          <div className={`border-2 border-dashed border-black hover:border-pink-400 rounded-lg p-6 cursor-pointer transition-all ${modalBgClass}`}>
             <input
               type="file"
               accept="image/*"
               className="hidden"
               onChange={onUpload}
-              disabled={isUploading}
+              disabled={isUploading || isSending}
             />
             <div className="flex flex-col items-center space-y-2">
               {isUploading ? (
@@ -107,29 +102,35 @@ export default function PaymentModal({
 
         {/* Error */}
         {fileError && (
-          <p className="text-red-500 text-sm bg-red-50 p-2 rounded mb-4">
-            {fileError}
-          </p>
+          <p className="text-red-500 text-sm bg-red-50 p-2 rounded mb-4">{fileError}</p>
         )}
 
         {/* Botones */}
         <div className="flex justify-end space-x-4">
           <button
             onClick={onCancel}
+            disabled={isSending}
             className="px-6 py-2 bg-gray-200 text-black rounded hover:bg-gray-300"
           >
             Cancelar
           </button>
           <button
             onClick={onConfirm}
-            disabled={!paymentFile || isUploading}
-            className={`px-6 py-2 rounded ${
-              paymentFile && !isUploading
+            disabled={!paymentFile || isUploading || isSending}
+            className={`px-6 py-2 rounded flex items-center justify-center gap-2 ${
+              paymentFile && !isUploading && !isSending
                 ? 'bg-pink-500 text-white hover:bg-pink-600'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
           >
-            {isUploading ? 'Procesando...' : 'Confirmar pago'}
+            {isSending ? (
+              <>
+                <FiLoader className="animate-spin" />
+                Enviando...
+              </>
+            ) : (
+              'Confirmar pago'
+            )}
           </button>
         </div>
       </div>

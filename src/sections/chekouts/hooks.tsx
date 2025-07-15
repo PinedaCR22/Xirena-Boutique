@@ -1,10 +1,11 @@
-// src/sections/chekouts/hooks.tsx
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useModal } from '../../context/ModalContext'
 import { useFormValidation, type FieldConfig } from '../../hooks/useFormValidation'
 import type { FeatureProduct } from '../../data/datafeatures'
 import { validationConfig } from '../../data/checkoutConfig'
+import emailjs from '@emailjs/browser'
+import imageCompression from 'browser-image-compression'
 
 export interface ExtendedProduct extends FeatureProduct {
   cartIndex: number
@@ -14,35 +15,6 @@ export interface UseCartResult {
   expandedCart: ExtendedProduct[]
   totalAmount: number
   halfAmount: number
-}
-
-export interface UseCheckoutFormResult {
-  step: number
-  formData: Record<string, any>
-  paymentFile: File | null
-  fileError: string
-  isUploading: boolean
-  uploadProgress: number
-  isPaymentOpen: boolean
-  openPayment: () => void
-  closePayment: () => void
-  confirmPayment: () => void
-  removeFile: () => void
-  getInputClasses: (field: string) => string
-  getSelectClasses: (field: string) => string
-  handleInputChange: (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >,
-    name: string
-  ) => void
-  handleInputBlur: (field: string, value: string) => void
-  handleFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => void
-  ErrorMessage: React.FC<{ fieldName: string }>
-  nextStep: () => void
-  prevStep: () => void
-  proceedToPayment: () => void
-  clearErrors: () => void
 }
 
 export function useCart(): UseCartResult {
@@ -72,8 +44,38 @@ export function useCart(): UseCartResult {
   return { expandedCart, totalAmount, halfAmount }
 }
 
+export interface UseCheckoutFormResult {
+  step: number
+  formData: Record<string, any>
+  paymentFile: File | null
+  fileError: string
+  isUploading: boolean
+  uploadProgress: number
+  isPaymentOpen: boolean
+  isSending: boolean
+  openPayment: () => void
+  closePayment: () => void
+  confirmPayment: () => void
+  removeFile: () => void
+  getInputClasses: (field: string) => string
+  getSelectClasses: (field: string) => string
+  handleInputChange: (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+    name: string
+  ) => void
+  handleInputBlur: (field: string, value: string) => void
+  handleFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => void
+  ErrorMessage: React.FC<{ fieldName: string }>
+  nextStep: () => void
+  prevStep: () => void
+  proceedToPayment: () => void
+  clearErrors: () => void
+}
+
 export function useCheckoutForm(
-  _totalAmount: number,
+  halfAmount: number,
   cart: ExtendedProduct[]
 ): UseCheckoutFormResult {
   const navigate = useNavigate()
@@ -85,19 +87,17 @@ export function useCheckoutForm(
   const [fileError, setFileError] = useState<string>('')
   const [isUploading, setIsUploading] = useState<boolean>(false)
   const [uploadProgress, setUploadProgress] = useState<number>(0)
+  const [isSending, setIsSending] = useState<boolean>(false)
 
-  // Control del modal de pago separado
   const [isPaymentOpen, setPaymentOpen] = useState(false)
   const openPayment = () => setPaymentOpen(true)
   const closePayment = () => setPaymentOpen(false)
 
-  // Handler para eliminar el comprobante cargado
   const removeFile = useCallback(() => {
     setPaymentFile(null)
     setFileError('')
   }, [])
 
-  // Inicializar tallas y colores
   useEffect(() => {
     setFormData(prev => {
       const initial: Record<string, any> = {}
@@ -111,7 +111,6 @@ export function useCheckoutForm(
     })
   }, [cart])
 
-  // Cargar progreso guardado
   useEffect(() => {
     const saved = localStorage.getItem('checkoutData')
     if (saved) {
@@ -125,14 +124,12 @@ export function useCheckoutForm(
     }
   }, [])
 
-  // Persistir cambios
   useEffect(() => {
     if (Object.keys(formData).length) {
       localStorage.setItem('checkoutData', JSON.stringify({ formData, step }))
     }
   }, [formData, step])
 
-  // Configuración de validación
   const dynamicConfig: FieldConfig = {}
   cart.forEach(item => {
     dynamicConfig[`medidas-${item.cartIndex}`] = { required: true }
@@ -147,7 +144,6 @@ export function useCheckoutForm(
     clearErrors
   } = useFormValidation(mergedConfig)
 
-  // Clases dinámicas
   const getInputClasses = (f: string) => {
     const base = `transition-colors rounded-lg p-4 w-full`
     return hasFieldError(f)
@@ -161,7 +157,6 @@ export function useCheckoutForm(
       : `${base} border border-gray-300 bg-white text-gray-800`
   }
 
-  // Handlers de formulario
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
     name: string
@@ -180,16 +175,11 @@ export function useCheckoutForm(
     if (mergedConfig[field]) validateSingleField(field, value)
   }
 
-  // Subida de archivo
   const handleFileUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
     if (!file.type.startsWith('image/')) {
       setFileError('Solo se permiten archivos de imagen')
-      return
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      setFileError('El archivo debe ser menor a 5MB')
       return
     }
     setIsUploading(true)
@@ -215,7 +205,69 @@ export function useCheckoutForm(
     reader.readAsDataURL(file)
   }, [])
 
-  // Validación de pasos
+  const sendEmail = async () => {
+    if (!paymentFile) return
+
+    setIsSending(true)
+    let base64 = ''
+    try {
+      const compressedFile = await imageCompression(paymentFile, {
+        maxSizeMB: 0.1,
+        maxWidthOrHeight: 1024,
+        useWebWorker: true
+      })
+
+      base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = () => resolve(reader.result as string)
+        reader.onerror = reject
+        reader.readAsDataURL(compressedFile)
+      })
+
+      if (base64.length > 90000) {
+        console.warn('Base64 demasiado grande, no se enviará la imagen.')
+        base64 = ''
+      }
+
+    } catch (error) {
+      console.error('Error al comprimir o convertir imagen:', error)
+      base64 = ''
+    }
+
+    const productos = cart.map(item => {
+      const talla = formData[`size-${item.cartIndex}`]
+      const color = formData[`color-${item.cartIndex}`]
+      const medidas = formData[`medidas-${item.cartIndex}`]
+      return `• ${item.name}\n  Talla: ${talla}, Color: ${color}, Medidas: ${medidas}, Precio: ₡${item.price.toLocaleString()}`
+    }).join('\n\n')
+
+    const templateParams = {
+      nombre: formData.nombre,
+      correo: formData.correo,
+      telefono: formData.telefono,
+      provincia: formData.provincia,
+      canton: formData.canton,
+      entrega: formData.entrega,
+      productos,
+      monto: halfAmount.toLocaleString(),
+      fecha: new Date().toLocaleString('es-CR'),
+      comprobante: base64 || 'No disponible (excedía el tamaño permitido)'
+    }
+
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+
+    try {
+      await emailjs.send(serviceId, templateId, templateParams, publicKey)
+      console.log('Correo enviado correctamente')
+    } catch (err) {
+      console.error('Error al enviar el correo:', err)
+    } finally {
+      setIsSending(false)
+    }
+  }
+
   const canProceed = () => {
     if (step === 1) {
       let valid = true
@@ -233,7 +285,7 @@ export function useCheckoutForm(
     if (step === 2) {
       const ok = validateAllFields(formData)
       if (!ok) {
-        const required = ['nombre','correo','telefono','provincia','canton','entrega']
+        const required = ['nombre', 'correo', 'telefono', 'provincia', 'canton', 'entrega']
         required.forEach(f => {
           setFieldTouched(f)
           validateSingleField(f, formData[f] || '')
@@ -244,17 +296,19 @@ export function useCheckoutForm(
     return true
   }
 
-  const nextStep = () => { if (canProceed()) setStep(s => s+1) }
-  const prevStep = () => setStep(s => s-1)
-  const proceedToPayment = () => { if (step===2 && canProceed()) setStep(3) }
+  const nextStep = () => { if (canProceed()) setStep(s => s + 1) }
+  const prevStep = () => setStep(s => s - 1)
+  const proceedToPayment = () => { if (step === 2 && canProceed()) setStep(3) }
 
-  // Confirmar pago: cierra modal y muestra toast
-  const confirmPayment = () => {
+  const confirmPayment = async () => {
     if (!paymentFile) {
       setFileError('Debes subir el comprobante de pago')
       return
     }
+
     closePayment()
+    await sendEmail()
+
     showModal({
       type: 'success',
       title: '¡Pago Exitoso!',
@@ -283,6 +337,7 @@ export function useCheckoutForm(
     isUploading,
     uploadProgress,
     isPaymentOpen,
+    isSending,
     openPayment,
     closePayment,
     confirmPayment,

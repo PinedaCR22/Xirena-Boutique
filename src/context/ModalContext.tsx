@@ -13,6 +13,8 @@ export interface ModalConfig {
   message?: string         // Texto adicional opcional
   content?: ReactNode
   action?: () => void      // Función al cerrar
+  secondaryAction?: () => void // Acción secundaria (ej. generar comprobante)
+  secondaryLabel?: string      // Texto del segundo botón
 }
 
 interface ModalContextValue {
@@ -100,21 +102,31 @@ export const ModalProvider: FC<{ children: ReactNode }> = ({ children }) => {
             </div>
             <h2 className="text-2xl font-semibold mb-2">{toastModal.title}</h2>
             {toastModal.message && (
-              <p className="mb-4 text-sm">{toastModal.message}</p>
+              <p className="mb-4 text-sm text-center whitespace-pre-line">{toastModal.message}</p>
             )}
-            <button
-              onClick={() => {
-                toastModal.action?.()
-                hideModal('toast')
-              }}
-              className={`px-4 py-2 rounded transition ${
-                isLightMode
-                  ? 'bg-pink-500 text-white hover:bg-pink-600'
-                  : 'bg-pink-400 text-white hover:bg-pink-500'
-              }`}
-            >
-              Cerrar
-            </button>
+            <div className="flex space-x-4">
+              <button
+                onClick={() => {
+                  toastModal.action?.()
+                  hideModal('toast')
+                }}
+                className={`px-4 py-2 rounded transition ${
+                  isLightMode
+                    ? 'bg-pink-500 text-white hover:bg-pink-600'
+                    : 'bg-pink-400 text-white hover:bg-pink-500'
+                }`}
+              >
+                Cerrar
+              </button>
+              {toastModal.secondaryAction && toastModal.secondaryLabel && (
+                <button
+                  onClick={toastModal.secondaryAction}
+                  className={`px-4 py-2 rounded transition border border-pink-500 text-pink-500 hover:bg-pink-100`}
+                >
+                  {toastModal.secondaryLabel}
+                </button>
+              )}
+            </div>
           </div>
         </div>
       )}
