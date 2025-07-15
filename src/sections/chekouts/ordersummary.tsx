@@ -1,4 +1,4 @@
-// src/sections/chekouts/ordersummary.tsx
+// src/sections/chekouts/ordersummary.tsx (actualizado)
 import { useNavigate } from 'react-router-dom'
 import { FiArrowLeft, FiArrowRight } from 'react-icons/fi'
 
@@ -8,8 +8,8 @@ interface OrderSummaryProps {
   halfAmount: number
   prevStep: () => void
   nextStep: () => void
-  proceedToPayment: () => void    // Nueva función para ir al paso 3
-  openPaymentModal: () => void    // Nueva función para abrir modal
+  proceedToPayment: () => void
+  openPaymentModal: () => void
 }
 
 export default function OrderSummary({
@@ -35,7 +35,6 @@ export default function OrderSummary({
       </div>
 
       <div className="flex flex-col space-y-3">
-        {/* Si step>1 volvemos con prevStep(), si no, al carrito */}
         <button
           onClick={() => (step > 1 ? prevStep() : navigate('/cart'))}
           className="w-full px-6 py-2 bg-gray-200 text-black rounded hover:bg-gray-300"
@@ -43,7 +42,6 @@ export default function OrderSummary({
           <FiArrowLeft className="inline mr-2" /> Anterior
         </button>
 
-        {/* Botón principal dependiendo del paso */}
         {step === 1 ? (
           <button
             onClick={nextStep}
@@ -53,14 +51,14 @@ export default function OrderSummary({
           </button>
         ) : step === 2 ? (
           <button
-            onClick={proceedToPayment}  // Ir al paso 3
+            onClick={proceedToPayment}
             className="w-full px-6 py-2 bg-pink-500 text-white rounded hover:bg-pink-600"
           >
             Continuar al pago <FiArrowRight className="inline ml-2" />
           </button>
         ) : step === 3 ? (
           <button
-            onClick={openPaymentModal}  // Abrir modal de pago
+            onClick={openPaymentModal}
             className="w-full px-6 py-2 bg-pink-500 text-white rounded hover:bg-pink-600"
           >
             Realizar pago

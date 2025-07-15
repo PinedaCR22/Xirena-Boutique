@@ -3,9 +3,13 @@ import { FiCreditCard } from 'react-icons/fi'
 import { useCart, useCheckoutForm } from '../sections/chekouts/hooks'
 import Steps from '../sections/chekouts/steps'
 import OrderSummary from '../sections/chekouts/ordersummary'
+import PaymentModal from '../components/PaymentModal'
 
 export default function CheckoutPage() {
+  // Obtenemos carrito y totales mediante useCart
   const { expandedCart, totalAmount, halfAmount } = useCart()
+
+  // Pasamos totales y carrito al hook de checkout
   const {
     step,
     formData,
@@ -17,11 +21,20 @@ export default function CheckoutPage() {
     nextStep,
     prevStep,
     proceedToPayment,
-    openPaymentModal
+    isPaymentOpen,
+    openPayment,
+    closePayment,
+    handleFileUpload,
+    paymentFile,
+    fileError,
+    isUploading,
+    uploadProgress,
+    confirmPayment,
+    removeFile,          // Handler para eliminar la imagen
   } = useCheckoutForm(totalAmount, expandedCart)
 
   return (
-    <section className="py-12 px-4 sm:px-8 lg:px-16 min-h-screen transition-colors">
+    <section className="py-16 px-4 sm:px-8 lg:px-16 min-h-screen transition-colors">
       <h1 className="flex items-center mb-6 text-3xl font-bold">
         <FiCreditCard className="mr-2 text-pink-500" />
         Formulario de Compra
@@ -48,10 +61,25 @@ export default function CheckoutPage() {
             prevStep={prevStep}
             nextStep={nextStep}
             proceedToPayment={proceedToPayment}
-            openPaymentModal={openPaymentModal}
+            openPaymentModal={openPayment}
           />
         </div>
       </div>
+
+      {/* Modal de pago separado */}
+      {isPaymentOpen && (
+        <PaymentModal
+          totalAmount={halfAmount}
+          isUploading={isUploading}
+          uploadProgress={uploadProgress}
+          paymentFile={paymentFile}
+          fileError={fileError}
+          onUpload={handleFileUpload}
+          onRemoveFile={removeFile}   // Proporcionamos removeFile aquí
+          onCancel={closePayment}
+          onConfirm={confirmPayment}
+        />
+      )}
     </section>
   )
 }

@@ -75,7 +75,7 @@ export default function Wishes() {
     return (
       <div
         className={`min-h-[60vh] flex flex-col items-center justify-center transition-colors duration-300 ${
-          isLightMode ? 'bg-white text-gray-800' : 'bg-gray-900 text-gray-200'
+          isLightMode ? 'bg-white text-gray-800' : 'bg-[#f7e6e2] text-black'
         }`}
       >
         <FaHeartBroken className="text-6xl mb-4 text-red-500" />
@@ -93,7 +93,7 @@ export default function Wishes() {
 
   return (
     <section
-      className={`transition-colors duration-300 py-12 px-4 sm:px-8 lg:px-16 ${
+      className={`transition-colors duration-300 py-16 px-4 sm:px-8 lg:px-16 ${
         isLightMode ? 'bg-white text-gray-800' : 'bg-[#f7e6e2] text-black'
       }`}
     >

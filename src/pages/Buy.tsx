@@ -83,7 +83,7 @@ export default function Buy(): ReactElement {
     return (
       <div
         className={`min-h-[60vh] flex flex-col items-center justify-center transition-colors duration-300 ${
-          isLightMode ? 'bg-white text-gray-800' : 'bg-gray-900 text-gray-200'
+          isLightMode ? 'bg-white text-gray-800' : 'bg-[#f7e6e2] text-black'
         }`}
       >
         <FaHeartBroken className="text-6xl mb-4 text-red-500" />
@@ -101,11 +101,11 @@ export default function Buy(): ReactElement {
 
   return (
     <section
-      className={`transition-colors duration-300 py-12 px-4 sm:px-8 lg:px-16 ${
+      className={`transition-colors duration-300 py-16 px-4 sm:px-8 lg:px-16 ${
         isLightMode ? 'bg-white text-gray-800' : 'bg-[#f7e6e2] text-black'
       }`}
     >
-      <h1 className="flex items-center mb-8 text-4xl font-bold space-x-3">
+      <h1 className="flex items-center mb-12 text-4xl font-bold space-x-3">
         <FiShoppingCart className="text-pink-500" />
         <span>Mi Carrito</span>
       </h1>

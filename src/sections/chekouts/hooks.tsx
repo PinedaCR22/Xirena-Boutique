@@ -1,15 +1,10 @@
-// src/sections/chekouts/hooks.tsx
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useModal } from '../../context/ModalContext'
 import { useFormValidation, type FieldConfig } from '../../hooks/useFormValidation'
 import type { FeatureProduct } from '../../data/datafeatures'
 import { validationConfig } from '../../data/checkoutConfig'
-import { FiCheckCircle, FiUpload, FiLoader } from 'react-icons/fi'
 
-// ----------------------------------------
-// Tipos
-// ----------------------------------------
 export interface ExtendedProduct extends FeatureProduct {
   cartIndex: number
 }
@@ -27,12 +22,15 @@ export interface UseCheckoutFormResult {
   fileError: string
   isUploading: boolean
   uploadProgress: number
+  isPaymentOpen: boolean
+  openPayment: () => void
+  closePayment: () => void
+  confirmPayment: () => void
+  removeFile: () => void // Nuevo handler para eliminar archivo
   getInputClasses: (field: string) => string
   getSelectClasses: (field: string) => string
   handleInputChange: (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >,
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
     name: string
   ) => void
   handleInputBlur: (field: string, value: string) => void
@@ -41,13 +39,9 @@ export interface UseCheckoutFormResult {
   nextStep: () => void
   prevStep: () => void
   proceedToPayment: () => void
-  openPaymentModal: () => void
   clearErrors: () => void
 }
 
-// ----------------------------------------
-// useCart
-// ----------------------------------------
 export function useCart(): UseCartResult {
   const [expandedCart, setExpandedCart] = useState<ExtendedProduct[]>([])
 
@@ -75,11 +69,9 @@ export function useCart(): UseCartResult {
   return { expandedCart, totalAmount, halfAmount }
 }
 
-// ----------------------------------------
-// useCheckoutForm
-// ----------------------------------------
+// Prefix totalAmount with underscore para evitar warning de variable no usada
 export function useCheckoutForm(
-  totalAmount: number,
+  _totalAmount: number,
   cart: ExtendedProduct[]
 ): UseCheckoutFormResult {
   const navigate = useNavigate()
@@ -89,10 +81,21 @@ export function useCheckoutForm(
   const [formData, setFormData] = useState<Record<string, any>>({})
   const [paymentFile, setPaymentFile] = useState<File | null>(null)
   const [fileError, setFileError] = useState<string>('')
-  const [uploadProgress, setUploadProgress] = useState<number>(0)
   const [isUploading, setIsUploading] = useState<boolean>(false)
+  const [uploadProgress, setUploadProgress] = useState<number>(0)
 
-  // Inicializar tallas/colores
+  // Control del modal de pago separado
+  const [isPaymentOpen, setPaymentOpen] = useState(false)
+  const openPayment = () => setPaymentOpen(true)
+  const closePayment = () => setPaymentOpen(false)
+
+  // Handler para eliminar el comprobante cargado
+  const removeFile = useCallback(() => {
+    setPaymentFile(null)
+    setFileError('')
+  }, [])
+
+  // Inicializar tallas y colores
   useEffect(() => {
     setFormData(prev => {
       const initial: Record<string, any> = {}
@@ -127,7 +130,7 @@ export function useCheckoutForm(
     }
   }, [formData, step])
 
-  // Configuración de validación (paso 1 y 2)
+  // Configuración de validación
   const dynamicConfig: FieldConfig = {}
   cart.forEach(item => {
     dynamicConfig[`medidas-${item.cartIndex}`] = { required: true }
@@ -142,6 +145,7 @@ export function useCheckoutForm(
     clearErrors
   } = useFormValidation(mergedConfig)
 
+  // Clases dinámicas
   const getInputClasses = (f: string) => {
     const base = `transition-colors rounded-lg p-4 w-full`
     return hasFieldError(f)
@@ -155,10 +159,9 @@ export function useCheckoutForm(
       : `${base} border border-gray-300 bg-white text-gray-800`
   }
 
+  // Handlers de formulario
   const handleInputChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >,
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
     name: string
   ) => {
     const value = e.target.value
@@ -175,199 +178,42 @@ export function useCheckoutForm(
     if (mergedConfig[field]) validateSingleField(field, value)
   }
 
-  // Función para manejar la subida de archivos
+  // Subida de archivo
   const handleFileUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
-
-    // Validar tipo de archivo
     if (!file.type.startsWith('image/')) {
       setFileError('Solo se permiten archivos de imagen')
       return
     }
-
-    // Validar tamaño (5MB máximo)
     if (file.size > 5 * 1024 * 1024) {
       setFileError('El archivo debe ser menor a 5MB')
       return
     }
-
     setIsUploading(true)
     setFileError('')
     setUploadProgress(0)
-
-    // Simular progreso de carga
     const reader = new FileReader()
-    
-    reader.onloadstart = () => {
-      setUploadProgress(0)
-    }
-    
-    reader.onprogress = (event) => {
+    reader.onloadstart = () => setUploadProgress(0)
+    reader.onprogress = event => {
       if (event.lengthComputable) {
-        const percent = Math.round((event.loaded / event.total) * 100)
-        setUploadProgress(percent)
+        setUploadProgress(Math.round((event.loaded / event.total) * 100))
       }
     }
-    
     reader.onload = () => {
       setUploadProgress(100)
       setPaymentFile(file)
       setIsUploading(false)
     }
-    
     reader.onerror = () => {
       setFileError('Error al cargar el archivo')
       setIsUploading(false)
       setUploadProgress(0)
     }
-
     reader.readAsDataURL(file)
   }, [])
 
-  // Función para mostrar modal de éxito
-  const showSuccessModal = useCallback(() => {
-    showModal({
-      type: 'success' as const,
-      title: '¡Pago Exitoso!',
-      content: (
-        <div className="space-y-4 text-center">
-          <FiCheckCircle className="mx-auto text-4xl text-green-500" />
-          <p className="text-lg font-medium">
-            ¡Tu pago se ha procesado correctamente!
-          </p>
-          <p className="text-sm text-gray-600">
-            Te contactaremos pronto para coordinar la entrega.
-          </p>
-          <button
-            onClick={() => {
-              hideModal()
-              // Limpiar datos
-              localStorage.removeItem('cart')
-              localStorage.removeItem('checkoutData')
-              window.dispatchEvent(new Event('cartUpdated'))
-              clearErrors()
-              navigate('/')
-            }}
-            className="mt-4 px-6 py-2 bg-pink-500 text-white rounded hover:bg-pink-600 transition-colors"
-          >
-            Cerrar
-          </button>
-        </div>
-      )
-    })
-  }, [hideModal, clearErrors, navigate])
-
-  // Función para mostrar modal de pago
-  const showPaymentModal = useCallback(() => {
-    showModal({
-      type: 'info' as const,
-      title: 'Pago por Sinpe Móvil',
-      content: (
-        <div className="space-y-4 text-center">
-          <img 
-            src="/images/sinpe.png" 
-            alt="Sinpe Móvil" 
-            className="mx-auto h-16"
-            onError={(e) => {
-              e.currentTarget.style.display = 'none'
-            }}
-          />
-          <p>Depositar el 50% del monto total a:</p>
-          <div className="bg-gray-100 p-4 rounded-lg">
-            <p className="font-semibold text-lg">Número: 8888-8888</p>
-            <p className="font-semibold text-lg text-pink-600">
-              Monto: ₡{Math.floor(totalAmount / 2).toLocaleString()}
-            </p>
-          </div>
-
-          <div className="space-y-3">
-            <label className="block">
-              <div className={`border-2 border-dashed rounded-lg p-6 cursor-pointer transition-all ${
-                isUploading ? 'border-pink-300 bg-pink-50' : 'border-gray-300 hover:border-pink-400'
-              }`}>
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleFileUpload}
-                  disabled={isUploading}
-                />
-                
-                <div className="flex flex-col items-center space-y-2">
-                  {isUploading ? (
-                    <FiLoader className="text-2xl text-pink-500 animate-spin" />
-                  ) : (
-                    <FiUpload className="text-2xl text-gray-400" />
-                  )}
-                  
-                  <span className="text-sm text-gray-600">
-                    {isUploading ? 'Cargando archivo...' : 'Haz clic para subir comprobante'}
-                  </span>
-                </div>
-
-                {/* Barra de progreso */}
-                {isUploading && (
-                  <div className="w-full bg-gray-200 rounded-full mt-3 h-2 overflow-hidden">
-                    <div 
-                      className="h-2 bg-pink-500 transition-all duration-300 ease-out" 
-                      style={{ width: `${uploadProgress}%` }} 
-                    />
-                  </div>
-                )}
-
-                {/* Archivo seleccionado */}
-                {paymentFile && !isUploading && (
-                  <div className="mt-3 p-2 bg-green-50 rounded border border-green-200">
-                    <p className="text-sm text-green-700">
-                      <FiCheckCircle className="inline mr-1" />
-                      {paymentFile.name}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </label>
-
-            {fileError && (
-              <p className="text-red-500 text-sm bg-red-50 p-2 rounded">
-                {fileError}
-              </p>
-            )}
-          </div>
-
-          <div className="flex justify-center space-x-4 mt-6">
-            <button
-  onClick={() => hideModal()}
-  className="px-6 py-2 bg-gray-200 rounded hover:bg-gray-300 transition-colors"
->
-  Cancelar
-</button>
-
-            <button
-              onClick={() => {
-                if (!paymentFile) {
-                  setFileError('Debes subir el comprobante de pago')
-                  return
-                }
-                hideModal()
-                showSuccessModal()
-              }}
-              disabled={!paymentFile || isUploading}
-              className={`px-6 py-2 rounded transition-colors ${
-                paymentFile && !isUploading
-                  ? 'bg-pink-500 text-white hover:bg-pink-600'
-                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              }`}
-            >
-              {isUploading ? 'Procesando...' : 'Confirmar pago'}
-            </button>
-          </div>
-        </div>
-      )
-    })
-  }, [totalAmount, paymentFile, isUploading, uploadProgress, fileError, handleFileUpload, hideModal, showSuccessModal])
-
-  // Validación paso a paso
+  // Validación de pasos
   const canProceed = () => {
     if (step === 1) {
       let valid = true
@@ -399,7 +245,27 @@ export function useCheckoutForm(
   const nextStep = () => { if (canProceed()) setStep(s => s+1) }
   const prevStep = () => setStep(s => s-1)
   const proceedToPayment = () => { if (step===2 && canProceed()) setStep(3) }
-  const openPaymentModal = () => { if (step===3) showPaymentModal() }
+
+  // Confirmar pago: cierra modal y muestra toast
+  const confirmPayment = () => {
+    if (!paymentFile) {
+      setFileError('Debes subir el comprobante de pago')
+      return
+    }
+    closePayment()
+    showModal({
+      type: 'success',
+      title: '¡Pago Exitoso!',
+      action: () => {
+        hideModal()
+        localStorage.removeItem('cart')
+        localStorage.removeItem('checkoutData')
+        window.dispatchEvent(new Event('cartUpdated'))
+        clearErrors()
+        navigate('/')
+      }
+    })
+  }
 
   const ErrorMessage: React.FC<{ fieldName: string }> = ({ fieldName }) => {
     const err = getFieldError(fieldName)
@@ -413,16 +279,20 @@ export function useCheckoutForm(
     fileError,
     isUploading,
     uploadProgress,
+    isPaymentOpen,
+    openPayment,
+    closePayment,
+    confirmPayment,
+    removeFile,
     getInputClasses,
     getSelectClasses,
     handleInputChange,
     handleInputBlur,
-    handleFileUpload, 
+    handleFileUpload,
     ErrorMessage,
     nextStep,
     prevStep,
     proceedToPayment,
-    openPaymentModal,
     clearErrors
   }
 }
