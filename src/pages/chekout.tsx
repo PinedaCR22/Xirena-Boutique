@@ -31,6 +31,7 @@ export default function CheckoutPage() {
     uploadProgress,
     confirmPayment,
     removeFile,          // Handler para eliminar la imagen
+    isSending,
   } = useCheckoutForm(totalAmount, expandedCart)
 
   return (
@@ -78,6 +79,7 @@ export default function CheckoutPage() {
           onRemoveFile={removeFile}   // Proporcionamos removeFile aquí
           onCancel={closePayment}
           onConfirm={confirmPayment}
+          isSending={isSending}
         />
       )}
     </section>
