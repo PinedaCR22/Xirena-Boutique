@@ -4,6 +4,7 @@ import { useCart, useCheckoutForm } from '../sections/chekouts/hooks'
 import Steps from '../sections/chekouts/steps'
 import OrderSummary from '../sections/chekouts/ordersummary'
 import PaymentModal from '../components/PaymentModal'
+import LoadingOverlay from '../components/LoadingOverlay'
 
 export default function CheckoutPage() {
   // Obtenemos carrito y totales mediante useCart
@@ -30,8 +31,9 @@ export default function CheckoutPage() {
     isUploading,
     uploadProgress,
     confirmPayment,
-    removeFile,          // Handler para eliminar la imagen
+    removeFile,
     isSending,
+    isProcessingPayment,  // ← AGREGAR ESTA LÍNEA
   } = useCheckoutForm(totalAmount, expandedCart)
 
   return (
@@ -76,12 +78,19 @@ export default function CheckoutPage() {
           paymentFile={paymentFile}
           fileError={fileError}
           onUpload={handleFileUpload}
-          onRemoveFile={removeFile}   // Proporcionamos removeFile aquí
+          onRemoveFile={removeFile}
           onCancel={closePayment}
           onConfirm={confirmPayment}
           isSending={isSending}
+          isProcessingPayment={isProcessingPayment}  // ← AGREGAR ESTA LÍNEA
         />
       )}
+
+      {/* Loading Overlay - AGREGAR ESTA SECCIÓN */}
+      <LoadingOverlay 
+        isVisible={isProcessingPayment}
+        message="Procesando pago..."
+      />
     </section>
   )
 }

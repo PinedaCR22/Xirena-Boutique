@@ -105,28 +105,29 @@ export const ModalProvider: FC<{ children: ReactNode }> = ({ children }) => {
               <p className="mb-4 text-sm text-center whitespace-pre-line">{toastModal.message}</p>
             )}
             <div className="flex space-x-4">
-              <button
-                onClick={() => {
-                  toastModal.action?.()
-                  hideModal('toast')
-                }}
-                className={`px-4 py-2 rounded transition ${
-                  isLightMode
-                    ? 'bg-pink-500 text-white hover:bg-pink-600'
-                    : 'bg-pink-400 text-white hover:bg-pink-500'
-                }`}
-              >
-                Cerrar
-              </button>
-              {toastModal.secondaryAction && toastModal.secondaryLabel && (
-                <button
-                  onClick={toastModal.secondaryAction}
-                  className={`px-4 py-2 rounded transition border border-pink-500 text-pink-500 hover:bg-pink-100`}
-                >
-                  {toastModal.secondaryLabel}
-                </button>
-              )}
-            </div>
+  {toastModal.secondaryAction && toastModal.secondaryLabel && (
+    <button
+      onClick={toastModal.secondaryAction}
+      className={`px-6 py-2 rounded transition ${
+        isLightMode
+          ? 'bg-pink-500 text-white hover:bg-pink-600'
+          : 'bg-pink-400 text-white hover:bg-pink-500'
+      }`}
+    >
+      {toastModal.secondaryLabel}
+    </button>
+  )}
+  <button
+    onClick={() => {
+      toastModal.action?.()
+      hideModal('toast')
+    }}
+    className="px-6 py-2 bg-gray-200 text-black rounded hover:bg-gray-300"
+  >
+    Cerrar
+  </button>
+</div>
+
           </div>
         </div>
       )}
