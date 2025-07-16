@@ -68,15 +68,21 @@ export const CATEGORY_PRODUCTS: CategoryProduct[] = [
   { id: 51, name: 'Disfraz de Caperucita', price: 36000, image: '/images/PRUEBA1.jpg', description: 'Vestido rojo con capa y encaje.',                       category: 'Bottoms',  quantity: 1 },
   { id: 52, name: 'Disfraz de Marinera',   price: 32000, image: '/images/PRUEBA2.jpg', description: 'Vestido azul con gorro y anclas.',                     category: 'Bottoms',  quantity: 1 },
 
-  // Salidas de playa
-  { id: 37, name: 'Conjunto de Lino Natural',    price: 45000, image: '/images/PRUEBA2.jpg', description: 'Blusa y pantalón corto de lino beige.',                category: 'Salidas de playa', quantity: 1 },
-  { id: 38, name: 'Conjunto Deportivo',          price: 46000, image: '/images/PRUEBA3.jpg', description: 'Conjunto deportivo para entrenamiento y descanso.',     category: 'Salidas de playa', quantity: 1 },
-  { id: 39, name: 'Conjunto Floral',             price: 48000, image: '/images/PRUEBA4.jpg', description: 'Conjunto top y falda con estampado floral.',           category: 'Salidas de playa', quantity: 1 },
-  { id: 40, name: 'Conjunto Blanco Chic',        price: 47000, image: '/images/PRUEBA5.jpg', description: 'Top corto y pantalón blanco de vestir.',               category: 'Salidas de playa', quantity: 1 },
-  { id: 41, name: 'Conjunto Casual Rayas',       price: 44000, image: '/images/PRUEBA1.jpg', description: 'Conjunto casual con rayas horizontales.',             category: 'Salidas de playa', quantity: 1 },
-  { id: 42, name: 'Conjunto Elegante de Satén',  price: 49000, image: '/images/PRUEBA2.jpg', description: 'Top halter y pantalón de satén.',                     category: 'Salidas de playa', quantity: 1 },
-  { id: 43, name: 'Conjunto Denim',              price: 43000, image: '/images/PRUEBA3.jpg', description: 'Chaqueta corta y short de mezclilla.',                category: 'Salidas de playa', quantity: 1 },
-  { id: 44, name: 'Conjunto Boho',               price: 45500, image: '/images/PRUEBA4.jpg', description: 'Conjunto con estampado bohemio y tela fluida.',       category: 'Salidas de playa', quantity: 1 },
+ // Salidas de playa
+{ id: 37, name: 'Falda Almeja flotante',     price: 15800, image: '/images/categories/playa/Falda Almeja flotante (15,800).JPG',     description: '', category: 'Salidas de playa', quantity: 1 },
+{ id: 38, name: 'Falda Brisa bonita',        price: 15700, image: '/images/categories/playa/Falda Brisa bonita (15,700).JPG',        description: '', category: 'Salidas de playa', quantity: 1 },
+{ id: 39, name: 'Falda Colibrí',             price: 18600, image: '/images/categories/playa/Falda Colibrí (18,600).JPG',             description: '', category: 'Salidas de playa', quantity: 1 },
+{ id: 40, name: 'Falda Luna nocturna',       price: 19200, image: '/images/categories/playa/Falda Luna nocturna (19,200).JPG',       description: '', category: 'Salidas de playa', quantity: 1 },
+{ id: 41, name: 'Falda Mariposa del mar',    price: 14900, image: '/images/categories/playa/Falda Mariposa del mar (14,900).JPG',    description: '', category: 'Salidas de playa', quantity: 1 },
+{ id: 42, name: 'Falda ocelote lino',        price: 13800, image: '/images/categories/playa/Falda ocelote lino (13,800).JPG',        description: '', category: 'Salidas de playa', quantity: 1 },
+{ id: 43, name: 'Falda Perla',               price: 17800, image: '/images/categories/playa/Falda Perla.JPG',               description: '', category: 'Salidas de playa', quantity: 1 },
+{ id: 44, name: 'Falda tigra',               price: 14700, image: '/images/categories/playa/Falda tigra (14,700).JPG',               description: '', category: 'Salidas de playa', quantity: 1 },
+{ id: 45, name: 'Pantalón Manta oceánica',   price: 22400, image: '/images/categories/playa/Pantalón Manta oceánica (22,400).JPG',   description: '', category: 'Salidas de playa', quantity: 1 },
+{ id: 46, name: 'Pantalón pantera',          price: 19900, image: '/images/categories/playa/Pantalón pantera (19,900).JPG',          description: '', category: 'Salidas de playa', quantity: 1 },
+{ id: 47, name: 'Vestido Coconut',           price: 23200, image: '/images/categories/playa/Vestido coconut (23,200).JPG',           description: '', category: 'Salidas de playa', quantity: 1 },
+{ id: 48, name: 'Vestido Coco',              price: 23200, image: '/images/categories/playa/Vestido Coconut (23,200) (1).JPG',       description: '', category: 'Salidas de playa', quantity: 1 },
+
+
 
   // Accesorios
   { id: 69, name: 'Top Corto con Encaje',  price: 20000, image: '/images/PRUEBA3.jpg', description: 'Top corto negro con detalles de encaje.',             category: 'Accesorios', quantity: 1 },
