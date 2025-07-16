@@ -6,6 +6,7 @@ import type { FeatureProduct } from '../../data/datafeatures'
 import { validationConfig } from '../../data/checkoutConfig'
 import emailjs from '@emailjs/browser'
 import imageCompression from 'browser-image-compression'
+import { useReceiptGenerator } from '../../data/useReceiptGenerator'
 
 export interface ExtendedProduct extends FeatureProduct {
   cartIndex: number
@@ -53,6 +54,7 @@ export interface UseCheckoutFormResult {
   uploadProgress: number
   isPaymentOpen: boolean
   isSending: boolean
+  isProcessingPayment: boolean
   openPayment: () => void
   closePayment: () => void
   confirmPayment: () => void
@@ -80,6 +82,7 @@ export function useCheckoutForm(
 ): UseCheckoutFormResult {
   const navigate = useNavigate()
   const { showModal, hideModal } = useModal()
+  const { generatePDF } = useReceiptGenerator()
 
   const [step, setStep] = useState(1)
   const [formData, setFormData] = useState<Record<string, any>>({})
@@ -88,6 +91,7 @@ export function useCheckoutForm(
   const [isUploading, setIsUploading] = useState<boolean>(false)
   const [uploadProgress, setUploadProgress] = useState<number>(0)
   const [isSending, setIsSending] = useState<boolean>(false)
+  const [isProcessingPayment, setIsProcessingPayment] = useState<boolean>(false)
 
   const [isPaymentOpen, setPaymentOpen] = useState(false)
   const openPayment = () => setPaymentOpen(true)
@@ -212,8 +216,8 @@ export function useCheckoutForm(
     let base64 = ''
     try {
       const compressedFile = await imageCompression(paymentFile, {
-        maxSizeMB: 0.1,
-        maxWidthOrHeight: 1024,
+        maxSizeMB: 0.04,
+        maxWidthOrHeight: 720,
         useWebWorker: true
       })
 
@@ -305,23 +309,47 @@ export function useCheckoutForm(
       setFileError('Debes subir el comprobante de pago')
       return
     }
-
+    
+    setIsProcessingPayment(true)
     closePayment()
-    await sendEmail()
+    
+    try {
+      await sendEmail()
 
-    showModal({
-      type: 'success',
-      title: '¡Pago Exitoso!',
-      message: 'Gracias por tu compra, te contactaremos pronto.',
-      action: () => {
-        localStorage.removeItem('cart')
-        localStorage.removeItem('checkoutData')
-        window.dispatchEvent(new Event('cartUpdated'))
-        clearErrors()
-        hideModal('toast')
-        navigate('/')
-      }
-    })
+      showModal({
+        type: 'success',
+        title: '¡Pago Exitoso!',
+        message: 'Gracias por tu compra, te contactaremos pronto.',
+        action: () => {
+          localStorage.removeItem('cart')
+          localStorage.removeItem('checkoutData')
+          window.dispatchEvent(new Event('cartUpdated'))
+          clearErrors()
+          hideModal('toast')
+          navigate('/')
+        },
+        secondaryLabel: 'Generar comprobante',
+        secondaryAction: () => {
+          generatePDF({
+            nombre: formData.nombre,
+            correo: formData.correo,
+            telefono: formData.telefono,
+            provincia: formData.provincia,
+            canton: formData.canton,
+            entrega: formData.entrega,
+            productos: cart,
+            monto: halfAmount,
+            fecha: new Date().toLocaleString('es-CR'),
+            formData
+          })
+        }
+      })
+    } catch (error) {
+      console.error('Error en el procesamiento:', error)
+      // Opcional: mostrar modal de error
+    } finally {
+      setIsProcessingPayment(false)
+    }
   }
 
   const ErrorMessage: React.FC<{ fieldName: string }> = ({ fieldName }) => {
@@ -338,6 +366,7 @@ export function useCheckoutForm(
     uploadProgress,
     isPaymentOpen,
     isSending,
+    isProcessingPayment,
     openPayment,
     closePayment,
     confirmPayment,

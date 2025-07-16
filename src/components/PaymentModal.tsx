@@ -6,6 +6,7 @@ interface PaymentModalProps {
   totalAmount: number
   isUploading: boolean
   isSending: boolean
+  isProcessingPayment: boolean  // ← AGREGAR ESTA LÍNEA
   uploadProgress: number
   paymentFile: File | null
   fileError: string
@@ -19,6 +20,7 @@ export default function PaymentModal({
   totalAmount,
   isUploading,
   isSending,
+  isProcessingPayment,  // ← AGREGAR ESTA LÍNEA
   uploadProgress,
   paymentFile,
   fileError,
@@ -58,7 +60,7 @@ export default function PaymentModal({
               accept="image/*"
               className="hidden"
               onChange={onUpload}
-              disabled={isUploading || isSending}
+              disabled={isUploading || isSending || isProcessingPayment}  // ← AGREGAR isProcessingPayment
             />
             <div className="flex flex-col items-center space-y-2">
               {isUploading ? (
@@ -90,7 +92,8 @@ export default function PaymentModal({
                 </p>
                 <button
                   onClick={onRemoveFile}
-                  className="text-black hover:text-red-600 transition-colors text-xl font-bold"
+                  disabled={isProcessingPayment}  // ← AGREGAR isProcessingPayment
+                  className="text-black hover:text-red-600 transition-colors text-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Eliminar archivo"
                 >
                   ×
@@ -109,16 +112,16 @@ export default function PaymentModal({
         <div className="flex justify-end space-x-4">
           <button
             onClick={onCancel}
-            disabled={isSending}
-            className="px-6 py-2 bg-gray-200 text-black rounded hover:bg-gray-300"
+            disabled={isSending || isProcessingPayment}  // ← AGREGAR isProcessingPayment
+            className="px-6 py-2 bg-gray-200 text-black rounded hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Cancelar
           </button>
           <button
             onClick={onConfirm}
-            disabled={!paymentFile || isUploading || isSending}
+            disabled={!paymentFile || isUploading || isSending || isProcessingPayment}  // ← AGREGAR isProcessingPayment
             className={`px-6 py-2 rounded flex items-center justify-center gap-2 ${
-              paymentFile && !isUploading && !isSending
+              paymentFile && !isUploading && !isSending && !isProcessingPayment
                 ? 'bg-pink-500 text-white hover:bg-pink-600'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
@@ -128,11 +131,26 @@ export default function PaymentModal({
                 <FiLoader className="animate-spin" />
                 Enviando...
               </>
+            ) : isProcessingPayment ? (  // ← AGREGAR ESTA CONDICIÓN
+              <>
+                <FiLoader className="animate-spin" />
+                Procesando...
+              </>
             ) : (
               'Confirmar pago'
             )}
           </button>
         </div>
+
+        {/* Indicador de procesamiento - OPCIONAL */}
+        {isProcessingPayment && (
+          <div className="mt-4 text-center">
+            <div className="inline-flex items-center">
+              <FiLoader className="animate-spin mr-2" />
+              <span className="text-sm text-gray-600">Procesando pago...</span>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
