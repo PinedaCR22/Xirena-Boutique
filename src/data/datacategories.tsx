@@ -31,14 +31,27 @@ export const CATEGORY_PRODUCTS: CategoryProduct[] = [
   { id: 35, name: 'Vestido Vintage Floral', price: 37000, image: '/images/PRUEBA5.jpg', description: 'Vestido floral estilo retro con cinturón.',                 category: 'Tops',    quantity: 1 },
   { id: 36, name: 'Vestido de Gasa',        price: 41000, image: '/images/PRUEBA1.jpg', description: 'Vestido ligero de gasa con tirantes finos.',                category: 'Tops',    quantity: 1 },
 
-// Vestidos
- { id: 77, name: 'Vestido mamona',    price: 35000, image: '/images/PRUEBA5.jpg', description: 'Vestido corto negro elegante con escote cruzado.',           category: 'Vestidos',    quantity: 1 },
-  { id: 78, name: 'Vestido de putilla',      price: 40000, image: '/images/PRUEBA1.jpg', description: 'Vestido ajustado con encaje delicado.',                     category: 'Vestidos',    quantity: 1 },
-  { id: 79, name: 'Vestido Junquillalera',  price: 36000, image: '/images/PRUEBA2.jpg', description: 'Vestido fluido con flores y escote corazón.',                category: 'Vestidos',    quantity: 1 },
-  { id: 80, name: 'Vestido La Paraiso',        price: 39000, image: '/images/PRUEBA3.jpg', description: 'Vestido tipo lencero satinado ideal para noche.',            category: 'Vestidos',    quantity: 1 },
-  { id: 81, name: 'Vestido Rio Seco',     price: 42000, image: '/images/PRUEBA4.jpg', description: 'Vestido largo de rayas verticales.',                         category: 'Vestidos',    quantity: 1 },
-  { id: 82, name: 'Vestido Lacastro', price: 37000, image: '/images/PRUEBA5.jpg', description: 'Vestido floral estilo retro con cinturón.',                 category: 'Vestidos',    quantity: 1 },
-  { id: 83, name: 'Vestido Ximena',        price: 41000, image: '/images/PRUEBA1.jpg', description: 'Vestido ligero de gasa con tirantes finos.',category: 'Vestidos',    quantity: 1 },
+  // Vestidos
+{ id: 77, name: 'Alina dress', price: 23500, image: '/images/categories/vestidos/Alina dress (23,500).JPG', description: '', category: 'Vestidos', quantity: 1 },
+{ id: 78, name: 'Angélica Dress', price: 53700, image: '/images/categories/vestidos/Angelicadress.jpg', description: '', category: 'Vestidos', quantity: 1 },
+{ id: 79, name: 'Catalina Dress', price: 25800, image: '/images/categories/vestidos/CATALINA.JPG', description: '', category: 'Vestidos', quantity: 1 },
+{ id: 80, name: 'Celeste Dress', price: 19600, image: '/images/categories/vestidos/Celeste Dress (19,600).jpg', description: '', category: 'Vestidos', quantity: 1 },
+{ id: 81, name: 'Chonta Dress', price: 28700, image: '/images/categories/vestidos/Chonta Dress (28,700).JPG', description: '', category: 'Vestidos', quantity: 1 },
+{ id: 82, name: 'Daiane Dress', price: 27800, image: '/images/categories/vestidos/Daiane Dress (27,800).JPG', description: '', category: 'Vestidos', quantity: 1 },
+{ id: 83, name: 'Dani Dress', price: 25200, image: '/images/categories/vestidos/Dani Dress (25,200).JPG', description: '', category: 'Vestidos', quantity: 1 },
+{ id: 84, name: 'Emely Dress', price: 18800, image: '/images/categories/vestidos/Emely Dress (18,800).JPG', description: '', category: 'Vestidos', quantity: 1 },
+{ id: 85, name: 'Emely Dress largo', price: 19800, image: '/images/categories/vestidos/Emely Dress largo (19,800).JPG', description: '', category: 'Vestidos', quantity: 1 },
+{ id: 86, name: 'Ericka Dress', price: 19300, image: '/images/categories/vestidos/Ericka Dress (19,300).JPG', description: '', category: 'Vestidos', quantity: 1 },
+{ id: 87, name: 'Leslie dress', price: 18800, image: '/images/categories/vestidos/Leslie dress (18,800).JPG', description: '', category: 'Vestidos', quantity: 1 },
+{ id: 88, name: 'Linsay Dress', price: 19600, image: '/images/categories/vestidos/Linsay Dress (19,600).JPG', description: '', category: 'Vestidos', quantity: 1 },
+{ id: 89, name: 'Loreto Dress', price: 19700, image: '/images/categories/vestidos/Loreto Dress (19,700).JPG', description: '', category: 'Vestidos', quantity: 1 },
+{ id: 90, name: 'Mayara Dress', price: 21800, image: '/images/categories/vestidos/Mayara Dress (21,800).JPG', description: '', category: 'Vestidos', quantity: 1 },
+{ id: 91, name: 'Mónica Dress', price: 29900, image: '/images/categories/vestidos/Mónica Dress( 29,900).JPG', description: '', category: 'Vestidos', quantity: 1 },
+{ id: 92, name: 'Rosa Dress', price: 26200, image: '/images/categories/vestidos/Rosa Dress (26,200).JPG', description: '', category: 'Vestidos', quantity: 1 },
+{ id: 93, name: 'Trace Dress', price: 23400, image: '/images/categories/vestidos/Trace Dress (23,400).JPG', description: '', category: 'Vestidos', quantity: 1 },
+{ id: 94, name: 'Violeta Dress', price: 23700, image: '/images/categories/vestidos/Violeta Dress (23,700).JPG', description: '', category: 'Vestidos', quantity: 1 },
+
+
 
   // Crochets
   { id: 53, name: 'Afrodita Top',         price: 22800, image: '/images/categories/crochets/AFRODITA TOP (22,800).JPG', description: 'Top de crochet con textura calada y tirantes finos.', category: 'Crochet', quantity: 1 },
