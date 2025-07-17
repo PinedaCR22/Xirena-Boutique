@@ -82,18 +82,18 @@ export const CATEGORY_PRODUCTS: CategoryProduct[] = [
   { id: 52, name: 'Disfraz de Marinera',   price: 32000, image: '/images/PRUEBA2.jpg', description: 'Vestido azul con gorro y anclas.',                     category: 'Bottoms',  quantity: 1 },
 
  // Salidas de playa
-{ id: 37, name: 'Falda Almeja flotante',     price: 15800, image: '/images/categories/playa/Falda Almeja flotante (15,800).JPG',     description: '', category: 'Salidas de playa', quantity: 1 },
-{ id: 38, name: 'Falda Brisa bonita',        price: 15700, image: '/images/categories/playa/Falda Brisa bonita (15,700).JPG',        description: '', category: 'Salidas de playa', quantity: 1 },
-{ id: 39, name: 'Falda Colibrí',             price: 18600, image: '/images/categories/playa/Falda Colibrí (18,600).JPG',             description: '', category: 'Salidas de playa', quantity: 1 },
-{ id: 40, name: 'Falda Luna nocturna',       price: 19200, image: '/images/categories/playa/Falda Luna nocturna (19,200).JPG',       description: '', category: 'Salidas de playa', quantity: 1 },
-{ id: 41, name: 'Falda Mariposa del mar',    price: 14900, image: '/images/categories/playa/Falda Mariposa del mar (14,900).JPG',    description: '', category: 'Salidas de playa', quantity: 1 },
-{ id: 42, name: 'Falda ocelote lino',        price: 13800, image: '/images/categories/playa/Falda ocelote lino (13,800).JPG',        description: '', category: 'Salidas de playa', quantity: 1 },
-{ id: 43, name: 'Falda Perla',               price: 17800, image: '/images/categories/playa/Falda Perla.JPG',               description: '', category: 'Salidas de playa', quantity: 1 },
-{ id: 44, name: 'Falda tigra',               price: 14700, image: '/images/categories/playa/Falda tigra (14,700).JPG',               description: '', category: 'Salidas de playa', quantity: 1 },
-{ id: 45, name: 'Pantalón Manta oceánica',   price: 22400, image: '/images/categories/playa/Pantalón Manta oceánica (22,400).JPG',   description: '', category: 'Salidas de playa', quantity: 1 },
-{ id: 46, name: 'Pantalón pantera',          price: 19900, image: '/images/categories/playa/Pantalón pantera (19,900).JPG',          description: '', category: 'Salidas de playa', quantity: 1 },
-{ id: 47, name: 'Vestido Coconut',           price: 23200, image: '/images/categories/playa/Vestido coconut (23,200).JPG',           description: '', category: 'Salidas de playa', quantity: 1 },
-{ id: 48, name: 'Vestido Coco',              price: 23200, image: '/images/categories/playa/Vestido Coconut (23,200) (1).JPG',       description: '', category: 'Salidas de playa', quantity: 1 },
+{ id: 37, name: 'Falda Almeja flotante',     price: 15800, image: '/images/categories/playa/Falda Almeja flotante (15,800).JPG',     description: 'Se mueve con gracia, guarda secretos y abraza el cuerpo con una ligereza mágica.', category: 'Salidas de playa', quantity: 1 },
+{ id: 38, name: 'Falda Brisa bonita',        price: 15700, image: '/images/categories/playa/Falda Brisa bonita (15,700).JPG',        description: 'Una prenda ligera, femenina, como un suspiro de verano.', category: 'Salidas de playa', quantity: 1 },
+{ id: 39, name: 'Falda Colibrí',             price: 18600, image: '/images/categories/playa/Falda Colibrí (18,600).JPG',             description: 'Ligera como el aire, fuerte como tu esencia.', category: 'Salidas de playa', quantity: 1 },
+{ id: 40, name: 'Falda Luna nocturna',       price: 19200, image: '/images/categories/playa/Falda Luna nocturna (19,200).JPG',       description: 'Te representa.. silenciosa, magnética, segura', category: 'Salidas de playa', quantity: 1 },
+{ id: 41, name: 'Falda Mariposa del mar',    price: 14900, image: '/images/categories/playa/Falda Mariposa del mar (14,900).JPG',    description: 'Nacida entre olas y alas, ideal para quienes viven con emoción y ligereza.', category: 'Salidas de playa', quantity: 1 },
+{ id: 42, name: 'Falda ocelote lino',        price: 13800, image: '/images/categories/playa/Falda ocelote lino (13,800).JPG',        description: 'El lino la hace suave; el diseño, inolvidable.', category: 'Salidas de playa', quantity: 1 },
+{ id: 43, name: 'Falda Perla',               price: 17800, image: '/images/categories/playa/Falda Perla.JPG',               description: 'Una prenda que representa delicadeza sin fragilidad.', category: 'Salidas de playa', quantity: 1 },
+{ id: 44, name: 'Falda tigra',               price: 14700, image: '/images/categories/playa/Falda tigra (14,700).JPG',               description: 'Tiene la fuerza de una mujer que no se esconde y el estilo de quien deja huella.', category: 'Salidas de playa', quantity: 1 },
+{ id: 45, name: 'Pantalón Manta oceánica',   price: 22400, image: '/images/categories/playa/Pantalón Manta oceánica (22,400).JPG',   description: 'Cada paso con este pantalón es una ola que avanza con elegancia.', category: 'Salidas de playa', quantity: 1 },
+{ id: 46, name: 'Pantalón pantera',          price: 19900, image: '/images/categories/playa/Pantalón pantera (19,900).JPG',          description: 'Caminar con este diseño es moverse con presencia y estilo.', category: 'Salidas de playa', quantity: 1 },
+{ id: 47, name: 'Vestido Coconut',           price: 23200, image: '/images/categories/playa/Vestido coconut (23,200).JPG',           description: 'Fresco, suave y natural como una tarde de sol en la playa.', category: 'Salidas de playa', quantity: 1 },
+{ id: 48, name: 'Vestido Coco',              price: 23200, image: '/images/categories/playa/Vestido Coconut (23,200) (1).JPG',       description: 'Fresco, suave y natural como una tarde de sol en la playa.', category: 'Salidas de playa', quantity: 1 },
 
 
 
