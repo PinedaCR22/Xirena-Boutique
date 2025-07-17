@@ -85,7 +85,7 @@ export const CATEGORY_PRODUCTS: CategoryProduct[] = [
 
 
   // Accesorios
-  { id: 69, name: 'Top Corto con Encaje',  price: 20000, image: '/images/PRUEBA3.jpg', description: 'Top corto negro con detalles de encaje.',             category: 'Accesorios', quantity: 1 },
+  { id: 69, name: 'Top Corto',  price: 20000, image: '/images/PRUEBA3.jpg', description: 'Top corto negro con detalles de encaje.',             category: 'Accesorios', quantity: 1 },
   { id: 70, name: 'Camisa Oversize',       price: 27000, image: '/images/PRUEBA4.jpg', description: 'Camisa blanca estilo oversize con bolsillos.',         category: 'Accesorios', quantity: 1 },
   { id: 71, name: 'Pantalones Culotte',    price: 29000, image: '/images/PRUEBA5.jpg', description: 'Pantalones amplios hasta la pantorrilla.',            category: 'Accesorios', quantity: 1 },
   { id: 72, name: 'Crop Top Fluido',       price: 21000, image: '/images/PRUEBA1.jpg', description: 'Crop top de tirantes con tela fluida.',               category: 'Accesorios', quantity: 1 },
