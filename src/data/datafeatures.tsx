@@ -9,7 +9,7 @@ export interface FeatureProduct {
 }
 
 export const ALL_PRODUCTS: FeatureProduct[] = [
-  { id: 1,  name: 'Bolso de cuero Clásico',       price: 45000, image: '/images/PRUEBA1.jpg', description: 'Bolso de cuero genuino con asa ajustable y cierre metálico.' },
+  { id: 1,  name: 'Bolso vestido',       price: 80000, image: '/images/sinpe.png', description: 'Bolso de cuero genuino con asa ajustable y cierre metálico.' },
   { id: 2,  name: 'Vestido Floral Veraniego',      price: 38000, image: '/images/PRUEBA2.jpg', description: 'Vestido largo con estampado floral y tirantes finos.' },
   { id: 3,  name: 'Blusa de seda Elegante',        price: 28000, image: '/images/PRUEBA3.jpg', description: 'Blusa de seda con cuello en V y mangas abullonadas.' },
   { id: 4,  name: 'Falda midi Plisada',            price: 32000, image: '/images/PRUEBA4.jpg', description: 'Falda midi plisada con cintura elástica.' },
