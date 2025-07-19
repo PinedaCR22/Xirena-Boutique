@@ -7,6 +7,7 @@ export interface FeatureProduct {
   quantity: number
 }
 
+
 export const FEATURED_PRODUCTS: FeatureProduct[] = [
   { id: 1, name: 'Amelie bikini', price: 25600, image: '/images/best/Amelie bikini (25,600) (1).PNG', description: '', quantity: 1 },
   { id: 2, name: 'Angélica Dress', price: 53700, image: '/images/best/Angélica Dress (53,700) (1).JPG', description: '', quantity: 1 },
