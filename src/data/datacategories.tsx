@@ -164,6 +164,7 @@ export const CATEGORY_PRODUCTS: CategoryProduct[] = [
 
 
 
+
   // Accesorios
   { id: 153, name: 'Bandana Celia', price: 13800, image: '/images/categories/accesorios/Bandana Celia (13,800).JPG', description: '', category: 'Accesorios', quantity: 1 },
   { id: 154, name: 'Bandana crochet', price: 12800, image: '/images/categories/accesorios/Bandana crochet (12,800).JPG', description: '', category: 'Accesorios', quantity: 1 },
