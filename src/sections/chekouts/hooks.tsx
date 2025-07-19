@@ -5,7 +5,7 @@ import { useFormValidation, type FieldConfig } from '../../hooks/useFormValidati
 import type { FeatureProduct } from '../../data/datafeatures'
 import { validationConfig } from '../../data/checkoutConfig'
 import emailjs from '@emailjs/browser'
-import imageCompression from 'browser-image-compression'
+// import imageCompression from 'browser-image-compression' // Comentado para desactivar envío de imagen
 import { useReceiptGenerator } from '../../data/useReceiptGenerator'
 
 export interface ExtendedProduct extends FeatureProduct {
@@ -210,33 +210,30 @@ export function useCheckoutForm(
   }, [])
 
   const sendEmail = async () => {
-    if (!paymentFile) return
+    // Imagen desactivada temporalmente
+    // let base64 = ''
+    // try {
+    //   const compressedFile = await imageCompression(paymentFile, {
+    //     maxSizeMB: 0.04,
+    //     maxWidthOrHeight: 720,
+    //     useWebWorker: true
+    //   })
 
-    setIsSending(true)
-    let base64 = ''
-    try {
-      const compressedFile = await imageCompression(paymentFile, {
-        maxSizeMB: 0.04,
-        maxWidthOrHeight: 720,
-        useWebWorker: true
-      })
+    //   base64 = await new Promise<string>((resolve, reject) => {
+    //     const reader = new FileReader()
+    //     reader.onload = () => resolve(reader.result as string)
+    //     reader.onerror = reject
+    //     reader.readAsDataURL(compressedFile)
+    //   })
 
-      base64 = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader()
-        reader.onload = () => resolve(reader.result as string)
-        reader.onerror = reject
-        reader.readAsDataURL(compressedFile)
-      })
-
-      if (base64.length > 90000) {
-        console.warn('Base64 demasiado grande, no se enviará la imagen.')
-        base64 = ''
-      }
-
-    } catch (error) {
-      console.error('Error al comprimir o convertir imagen:', error)
-      base64 = ''
-    }
+    //   if (base64.length > 90000) {
+    //     console.warn('Base64 demasiado grande, no se enviará la imagen.')
+    //     base64 = ''
+    //   }
+    // } catch (error) {
+    //   console.error('Error al comprimir o convertir imagen:', error)
+    //   base64 = ''
+    // }
 
     const productos = cart.map(item => {
       const talla = formData[`size-${item.cartIndex}`]
@@ -255,7 +252,7 @@ export function useCheckoutForm(
       productos,
       monto: halfAmount.toLocaleString(),
       fecha: new Date().toLocaleString('es-CR'),
-      comprobante: base64 || 'No disponible (excedía el tamaño permitido)'
+      comprobante: 'Adjunto solo en PDF' // base64 || 'No disponible'
     }
 
     const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID
@@ -309,10 +306,10 @@ export function useCheckoutForm(
       setFileError('Debes subir el comprobante de pago')
       return
     }
-    
+
     setIsProcessingPayment(true)
     closePayment()
-    
+
     try {
       await sendEmail()
 
@@ -346,7 +343,6 @@ export function useCheckoutForm(
       })
     } catch (error) {
       console.error('Error en el procesamiento:', error)
-      // Opcional: mostrar modal de error
     } finally {
       setIsProcessingPayment(false)
     }

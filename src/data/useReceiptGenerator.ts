@@ -139,13 +139,6 @@ export function useReceiptGenerator() {
     currentY += 10
     addLine()
 
-    // Redes sociales
-    addText('CONTACTO Y REDES:', 12, true)
-    addText('📞 WhatsApp: (+506) 6123-7935')
-    addText('📷 Instagram: @xirena_design')
-    addText('📘 Facebook: Xirena')
-    addText('🎵 TikTok: @xirenaboutique')
-
     // Guardar PDF
     const fileName = `comprobante_${data.nombre.replace(/\s+/g, '_')}_${Date.now()}.pdf`
     doc.save(fileName)
