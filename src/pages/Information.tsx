@@ -6,19 +6,19 @@ const cards = [
     delay: 0.2,
     content:
       "En Xirena Design creemos que la ropa no solo se usa, también se siente… Nacimos del deseo de crear prendas que abracen el cuerpo, pero también la esencia de cada mujer. Desde bikinis llenos de actitud hasta vestidos de gala, confeccionamos diseños únicos para mujeres que se eligen todos los días.",
-    image: "/images/inf1.jpg",
+    image: "https://i.ibb.co/SDf87gzw/inf1.webp",
   },
   {
     delay: 0.6,
     content:
       "Nos inspira la idea de que cada chica merece una prenda tan única como ella, que refleje quién es y la acompañe en su versión más auténtica.\n\nCada pieza es pensada con intención, confeccionada con detalle y hecha para convertirse en parte de su esencia, no solo de su armario.",
-    image: "/images/inf2.jpg",
+    image: "https://i.ibb.co/YF2xKC4f/inf2.webp",
   },
   {
     delay: 1.0,
     content:
       "Además, en Xirena apostamos por un camino más consciente. Trabajamos bajo los principios del slow fashion, con procesos responsables, materiales de calidad y confección personalizada. Así reducimos el desperdicio y creamos prendas que duran y tienen valor real.\n\nDiseño, estilo, poder y propósito a tu medida.",
-    image: "/images/inf3.jpg",
+    image: "https://i.ibb.co/rK6v1JmM/inf3.webp",
   },
 ]
 

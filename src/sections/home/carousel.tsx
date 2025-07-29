@@ -10,11 +10,11 @@ interface CarouselProps {
 }
 
 const slides = [
-  '/images/destacado/IMG_9294.JPG',
-  '/images/destacado/IMG_9283.JPG',
-  '/images/PRUEBA3.jpg',
-  '/images/PRUEBA4.jpg',
-  '/images/destacado/IMG_1366.PNG',
+  'https://i.ibb.co/QvTnm83x/IMG-1366.webp',
+  'https://i.ibb.co/gb24dRgN/IMG-9294.webp',
+  'https://i.ibb.co/rKb0TVSj/IMG-9283.webp',
+  'https://i.ibb.co/Y4nFZP9j/PRUEBA4.webp',
+  'https://i.ibb.co/9mbQ0z5t/PRUEBA3.webp',
 ];
 
 export default function Carousel({ isLightMode }: CarouselProps) {
