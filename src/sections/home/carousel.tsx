@@ -18,16 +18,14 @@ const slides = [
 ];
 
 export default function Carousel({ isLightMode }: CarouselProps) {
-  // Decide qué logo mostrar según el tema
   const logoSrc = isLightMode ? '/images/LOGOO.png' : '/images/WHITE.png';
 
+  const bgColor = isLightMode ? 'bg-white' : 'bg-[#f7e6e2]';
+  const imgBg = isLightMode ? 'bg-white' : 'bg-[#f7e6e2]';
+
   return (
-    <section
-      className={`py-8 transition-colors duration-300 ${
-        isLightMode ? 'bg-white' : 'bg-[#f7e6e2] text-black'
-      }`}
-    >
-      {/* Hero con logo dinámico */}
+    <section className={`py-8 transition-colors duration-300 ${bgColor}`}>
+      {/* Hero con logo */}
       <div className="text-center mb-8">
         <div className="mx-auto w-48 md:w-64 lg:w-80 h-24 md:h-32 lg:h-40 overflow-hidden rounded-lg">
           <img
@@ -36,7 +34,6 @@ export default function Carousel({ isLightMode }: CarouselProps) {
             className="object-contain object-center w-full h-full"
           />
         </div>
-        {/* Subtítulo llamativo */}
         <p
           className="mt-4 font-bold text-2xl md:text-3xl transition-colors duration-300 text-black"
           style={{ fontFamily: "'Dancing Script', cursive" }}
@@ -45,7 +42,7 @@ export default function Carousel({ isLightMode }: CarouselProps) {
         </p>
       </div>
 
-      {/* Swiper */}
+      {/* Carrusel */}
       <div className="relative px-8">
         <Swiper
           modules={[Navigation, Pagination, Autoplay]}
@@ -64,14 +61,12 @@ export default function Carousel({ isLightMode }: CarouselProps) {
           {slides.map((src, idx) => (
             <SwiperSlide key={idx}>
               <div
-                className={`w-full h-64 md:h-80 lg:h-96 rounded-lg overflow-hidden transition-colors duration-300 ${
-                  isLightMode ? 'bg-pink-50' : 'bg-gray-700'
-                }`}
+                className={`w-full h-64 md:h-80 lg:h-96 rounded-lg overflow-hidden transition-colors duration-300 ${imgBg}`}
               >
                 <img
                   src={src}
                   alt={`slide-${idx}`}
-                  className="object-cover object-top w-full h-full"
+                  className="object-contain w-full h-full"
                 />
               </div>
             </SwiperSlide>

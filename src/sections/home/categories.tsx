@@ -288,33 +288,48 @@ const Categories = forwardRef<CategoriesHandle>((_props, ref) => {
               ))}
             </div>
 
-            <div className="mt-10 flex justify-center space-x-2">
-              <button
-                onClick={() => setPage(p => Math.max(1, p - 1))}
-                disabled={page === 1}
-                className="p-2 rounded border border-black bg-white disabled:opacity-50"
-              >
-                <FiArrowLeft />
-              </button>
-              {Array.from({ length: pageCount }, (_, i) => (
-                <button
-                  key={i + 1}
-                  onClick={() => setPage(i + 1)}
-                  className={`w-8 h-8 flex items-center justify-center rounded border border-black ${
-                    page === i + 1 ? 'bg-pink-500 text-white' : 'bg-white text-black hover:bg-gray-100'
-                  }`}
-                >
-                  {i + 1}
-                </button>
-              ))}
-              <button
-                onClick={() => setPage(p => Math.min(pageCount, p + 1))}
-                disabled={page === pageCount}
-                className="p-2 rounded border border-black bg-white disabled:opacity-50"
-              >
-                <FiArrowRight />
-              </button>
-            </div>
+            <div className="mt-10 flex justify-center items-center gap-2 flex-wrap">
+  <button
+    onClick={() => setPage(p => Math.max(1, p - 1))}
+    disabled={page === 1}
+    className="p-2 rounded border border-black bg-white disabled:opacity-50"
+  >
+    <FiArrowLeft />
+  </button>
+
+  {(() => {
+    const groupSize = 5
+    const groupIndex = Math.floor((page - 1) / groupSize)
+    const startPage = groupIndex * groupSize + 1
+    const endPage = Math.min(startPage + groupSize - 1, pageCount)
+
+    return Array.from({ length: endPage - startPage + 1 }, (_, i) => {
+      const pageNumber = startPage + i
+      return (
+        <button
+          key={pageNumber}
+          onClick={() => setPage(pageNumber)}
+          className={`w-8 h-8 flex items-center justify-center rounded border border-black ${
+            page === pageNumber
+              ? 'bg-pink-500 text-white'
+              : 'bg-white text-black hover:bg-gray-100'
+          }`}
+        >
+          {pageNumber}
+        </button>
+      )
+    })
+  })()}
+
+  <button
+    onClick={() => setPage(p => Math.min(pageCount, p + 1))}
+    disabled={page === pageCount}
+    className="p-2 rounded border border-black bg-white disabled:opacity-50"
+  >
+    <FiArrowRight />
+  </button>
+</div>
+
           </div>
         </div>
       </div>
