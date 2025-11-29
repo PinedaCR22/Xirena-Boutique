@@ -35,8 +35,8 @@ export function useReceiptGenerator() {
       reader.readAsDataURL(blob)
       await new Promise<void>((resolve) => {
         reader.onloadend = () => {
-          const imgWidth = 40
-          const imgHeight = 20
+          const imgWidth = 50
+          const imgHeight = 30
           doc.addImage(reader.result as string, 'JPEG', pageWidth - imgWidth - margin, currentY, imgWidth, imgHeight)
           resolve()
         }
@@ -99,7 +99,7 @@ export function useReceiptGenerator() {
       addText(`Talla: ${talla}`, 11, false, [0, 0, 0], 5)
       addText(`Color: ${color}`, 11, false, [0, 0, 0], 5)
       addText(`Medidas: ${medidas}`, 11, false, [0, 0, 0], 5)
-      addText(`Precio: ₡${item.price.toLocaleString('es-CR', { minimumFractionDigits: 2 })}`, 12, false, [0, 0, 0], 5)
+      addText(`Precio: CRC ${item.price.toLocaleString('es-CR', { minimumFractionDigits: 2 })}`, 12, false, [0, 0, 0], 5)
 
       currentY += 5
       if (currentY > pageHeight - 60) {
@@ -121,13 +121,13 @@ export function useReceiptGenerator() {
     addText('RESUMEN DE PAGO', 14, true)
     doc.setTextColor(0, 0, 0)
 
-    const adelanto = data.monto
-    const totalGeneral = adelanto * 2
-    const pendiente = totalGeneral - adelanto
+    const totalGeneral = data.productos.reduce((sum, item) => sum + item.price, 0)
+    const adelanto = totalGeneral / 2
+    const pendiente = totalGeneral / 2
 
-    addText(`Total General: ₡${totalGeneral.toLocaleString('es-CR', { minimumFractionDigits: 2 })}`)
-    addText(`Adelanto (50%): ₡${adelanto.toLocaleString('es-CR', { minimumFractionDigits: 2 })}`, 12, true, [219, 39, 119])
-    addText(`Pendiente: ₡${pendiente.toLocaleString('es-CR', { minimumFractionDigits: 2 })}`)
+    addText(`Total General: CRC ${totalGeneral.toLocaleString('es-CR', { minimumFractionDigits: 2 })}`)
+    addText(`Adelanto (50%): CRC ${adelanto.toLocaleString('es-CR', { minimumFractionDigits: 2 })}`, 12, true, [219, 39, 119])
+    addText(`Pendiente (50%): CRC ${pendiente.toLocaleString('es-CR', { minimumFractionDigits: 2 })}`)
     currentY = resumenY + resumenHeight + 10
 
     addLine()

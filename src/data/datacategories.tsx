@@ -13,7 +13,7 @@ export interface CategoryProduct {
 
 export const CATEGORY_PRODUCTS: CategoryProduct[] = [
   // Bikinis
- { id: 16, name: 'Amanecer soleado bikini', price: 28700, image: '', description: '', category: 'Bikinis', quantity: 1 },
+ { id: 16, name: 'Amanecer soleado bikini', price: 28700, image: 'https://i.ibb.co/Xr31zBcT/amanecersoleado.webp', description: '', category: 'Bikinis', quantity: 1 },
   { id: 17, name: 'Amelie bikini', price: 25600, image: 'https://i.ibb.co/Dg4fhhd1/Amelie-bikini-25-600.webp', description: '', category: 'Bikinis', quantity: 1 },
   { id: 18, name: 'Andrea bikini', price: 22000, image: 'https://i.ibb.co/nq4zc5bZ/Andrea-bikini-22-000.webp', description: '', category: 'Bikinis', quantity: 1 },
   { id: 19, name: 'Athens Bikini', price: 26600, image: 'https://i.ibb.co/N6GmrSTh/Athens.webp', description: '', category: 'Bikinis', quantity: 1 },
@@ -42,13 +42,13 @@ export const CATEGORY_PRODUCTS: CategoryProduct[] = [
   { id: 43, name: 'Pool bikini', price: 26500, image: 'https://i.ibb.co/gZ6H5Mkt/Pool-bikini-26-500.webp', description: '', category: 'Bikinis', quantity: 1 },
   { id: 44, name: 'Roma Bikini', price: 26200, image: 'https://i.ibb.co/FLKgdyv2/Roma-Bikini-26-200.webp', description: '', category: 'Bikinis', quantity: 1 },
   { id: 45, name: 'Rosibel bikini', price: 28300, image: 'https://i.ibb.co/gMNvPh1M/Rosibel-bikini-28-300.webp', description: '', category: 'Bikinis', quantity: 1 },
-  { id: 46, name: 'Rumba bikini', price: 19800, image: '', description: '', category: 'Bikinis', quantity: 1 },
+  { id: 46, name: 'Rumba bikini', price: 19800, image: 'https://i.ibb.co/XxdWPDjT/rumbabikini.webp', description: '', category: 'Bikinis', quantity: 1 },
   { id: 47, name: 'Salty bikini', price: 28900, image: 'https://i.ibb.co/ZRwqWnVW/Salty-bikini-28-900.webp', description: '', category: 'Bikinis', quantity: 1 },
   { id: 48, name: 'Samba de mar bikini', price: 28300, image: 'https://i.ibb.co/DH8dHTxY/Samba-de-mar-bikini-28-300.webp', description: '', category: 'Bikinis', quantity: 1 },
   { id: 49, name: 'Silky bikini', price: 23800, image: 'https://i.ibb.co/C3N68p3z/Silky-bikini-23-800.webp', description: '', category: 'Bikinis', quantity: 1 },
   { id: 50, name: 'Sol & Mar bikini', price: 25800, image: 'https://i.ibb.co/fz0C5wyk/Sol-Mar-bikini-25-800.webp', description: '', category: 'Bikinis', quantity: 1 },
   { id: 51, name: 'Sombra de coco bikini', price: 28400, image: 'https://i.ibb.co/hJZr7b0G/Sombra-de-coco-bikini-28-400.webp', description: '', category: 'Bikinis', quantity: 1 },
-  { id: 52, name: 'Sun Kiss Bikini', price: 18800, image: '', description: '', category: 'Bikinis', quantity: 1 },
+  { id: 52, name: 'Sun Kiss Bikini', price: 18800, image: 'https://i.ibb.co/jkqJmnSX/sunkiss2.webp', description: '', category: 'Bikinis', quantity: 1 },
   { id: 53, name: 'TANNY BIKINI', price: 17800, image: 'https://i.ibb.co/Rpd53fC7/TANNY-BIKINI-17-800.webp', description: '', category: 'Bikinis', quantity: 1 },
   { id: 54, name: 'Tanny silk', price: 19400, image: 'https://i.ibb.co/67dKK2bS/Tanny-silk-19-400.webp', description: '', category: 'Bikinis', quantity: 1 },
   { id: 55, name: 'Teressa bikini', price: 27100, image: 'https://i.ibb.co/v2d0yQ0/Teressa-bikini-27-100.webp', description: '', category: 'Bikinis', quantity: 1 },
